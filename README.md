@@ -1,4 +1,4 @@
-# demp_app
+# firm_rex
 
 A new Flutter project.
 
