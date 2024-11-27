@@ -1,5 +1,4 @@
 import 'package:firm_rex/views/loginpage.dart';
-import 'package:firm_rex/views/map.dart';
 import 'package:flutter/material.dart';
 
 void main() {

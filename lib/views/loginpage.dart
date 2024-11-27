@@ -1,12 +1,10 @@
-import 'package:firm_rex/views/dashboard.dart';
-import 'package:firm_rex/views/static.dart';
+import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:esewa_flutter_sdk/esewa_config.dart';
 import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
 import 'package:esewa_flutter_sdk/esewa_payment.dart';
 import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/material.dart';
 
-import '../api/get.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -131,10 +129,10 @@ class LoginPageState extends State<LoginPage> {
                   SizedBox(height: 15),
                   GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const DashboardPage()), // Correct class name
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const DashboardPage()), // Correct class name
+                      );
                       // esewapaymentcall();
                     },
                     child: Align(
