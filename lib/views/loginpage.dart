@@ -63,7 +63,7 @@ class LoginPageState extends State<LoginPage> {
             Container(
               width: size.width / 2,
               child: Image.asset(
-                "images/foot_print.jpg",
+                "images/logo.jpeg",
                 fit: BoxFit.cover,
               )
             ),
