@@ -42,6 +42,235 @@ class IconHelper{
 }
 
 class dashboardPageState extends State<DashboardPage> {
+  Widget buildHorizontalScroll(int itemCount){
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+          itemCount,
+            (index) => Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child:
+            Container(
+              width: 350,
+              height: 180,
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(26.27),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x3F000000),
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                    spreadRadius: 0,
+                  )
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  Container(
+                    width: 330,
+                    height: 180,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          width: 1,
+                          strokeAlign: BorderSide.strokeAlignOutside,
+                          color: Color(0x33A5A5A5),
+                        ),
+                        borderRadius: BorderRadius.circular(26.27),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 130,
+                            height: 180,
+                            color: Colors.blue,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 125,
+                                  height: 110,
+                                  decoration: ShapeDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage("https://via.placeholder.com/114x78"),
+                                      fit: BoxFit.fill,
+                                    ),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                ),
+                                const SizedBox(height: 43,),
+                                Text(
+                                  'Last Visit: 25/11/2022',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontFamily: 'Fredoka',
+                                    fontWeight: FontWeight.w400,
+                                    height: 0.12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // const SizedBox(width: 5,),
+                          Container(
+                            width: 177,
+                            height: 180,
+                            color: Colors.blueGrey,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: 20, // Adjust top position
+                                  left: 0, // Adjust left position
+                                  child: Text(
+                                    'Dr. Nambuvan',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontFamily: 'Fredoka',
+                                      fontWeight: FontWeight.w500,
+                                      height: 0.07,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 45,
+                                  left: 0,
+                                  child: Text(
+                                    'Bachelor of veterinary science ',
+                                    style: TextStyle(
+                                      color: Color(0xFFA5A5A5),
+                                      fontSize: 12,
+                                      fontFamily: 'Fredoka',
+                                      fontWeight: FontWeight.w400,
+                                      height: 0.11,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 80,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 55,
+                                        height: 16,
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                                        decoration: ShapeDecoration(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(width: 1.09, color: Colors.redAccent),
+                                            borderRadius: BorderRadius.circular(21.89),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Roudy',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontFamily: 'Fredoka',
+                                            fontWeight: FontWeight.w400,
+                                            height: 0.19,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 13,),
+                                      Icon(
+                                        Icons.location_on,
+                                        color: Colors.red, // Icon color
+                                        size: 16.0, // Icon size
+                                      ),
+                                      const SizedBox(width: 2,),
+                                      Text(
+                                        '2.5 km',
+                                        style: TextStyle(
+                                          color: Color(0xFFA5A5A5),
+                                          fontSize: 11,
+                                          fontFamily: 'Fredoka',
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.12,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 7,),
+                                      Icon(
+                                        Icons.attach_money, // Dollar icon
+                                        color: Colors.green, // Customize color
+                                        size: 16.0, // Customize size
+                                      ),
+                                      Text(
+                                        '100\$',
+                                        style: TextStyle(
+                                          color: Color(0xFFA5A5A5),
+                                          fontSize: 11,
+                                          fontFamily: 'Fredoka',
+                                          fontWeight: FontWeight.w400,
+                                          height: 0.12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 120,
+                                  left: 30, // Adjust this for horizontal positioning
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Handle button press
+                                      print('Book Appointment button pressed');
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size(80, 10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8), // Rounded corners
+                                        side: BorderSide(
+                                          color: Colors.transparent, // Make the border invisible
+                                          width: 0.0, // Set border width to 0.0
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5), // Button padding
+                                    ),
+                                    child: const Text(
+                                      'Book Appointment  >',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontFamily: 'Fredoka',
+                                        fontWeight: FontWeight.w400,
+                                        height: 1.2, // Adjust height for spacing
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -398,387 +627,227 @@ class dashboardPageState extends State<DashboardPage> {
                   ),
                 ),
                 const SizedBox(height: 15.24),
-                Container(
-                  width: 350,
-                  height: 180,
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26.27),
-                    ),
-                    shadows: [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: [
-                      Container(
-                        width: 330,
-                        height: 180,
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              strokeAlign: BorderSide.strokeAlignOutside,
-                              color: Color(0x33A5A5A5),
-                            ),
-                            borderRadius: BorderRadius.circular(26.27),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 130,
-                                height: 180,
-                                color: Colors.blue,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 125,
-                                      height: 110,
-                                      decoration: ShapeDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage("https://via.placeholder.com/114x78"),
-                                          fit: BoxFit.fill,
-                                        ),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 43,),
-                                    Text(
-                                      'Last Visit: 25/11/2022',
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 12,
-                                        fontFamily: 'Fredoka',
-                                        fontWeight: FontWeight.w400,
-                                        height: 0.12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // const SizedBox(width: 5,),
-                              Container(
-                                width: 177,
-                                height: 180,
-                                color: Colors.blueGrey,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      top: 20, // Adjust top position
-                                      left: 0, // Adjust left position
-                                      child: Text(
-                                        'Dr. Nambuvan',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontFamily: 'Fredoka',
-                                          fontWeight: FontWeight.w500,
-                                          height: 0.07,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 45,
-                                      left: 0,
-                                      child: Text(
-                                        'Bachelor of veterinary science ',
-                                        style: TextStyle(
-                                          color: Color(0xFFA5A5A5),
-                                          fontSize: 12,
-                                          fontFamily: 'Fredoka',
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.11,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 80,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 55,
-                                            height: 16,
-                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                                            decoration: ShapeDecoration(
-                                              shape: RoundedRectangleBorder(
-                                                side: BorderSide(width: 1.09, color: Colors.redAccent),
-                                                borderRadius: BorderRadius.circular(21.89),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              'Roudy',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10,
-                                                fontFamily: 'Fredoka',
-                                                fontWeight: FontWeight.w400,
-                                                height: 0.19,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 13,),
-                                          Icon(
-                                            Icons.location_on,
-                                            color: Colors.red, // Icon color
-                                            size: 16.0, // Icon size
-                                          ),
-                                          const SizedBox(width: 2,),
-                                          Text(
-                                            '2.5 km',
-                                            style: TextStyle(
-                                              color: Color(0xFFA5A5A5),
-                                              fontSize: 11,
-                                              fontFamily: 'Fredoka',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0.12,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 7,),
-                                          Icon(
-                                            Icons.attach_money, // Dollar icon
-                                            color: Colors.green, // Customize color
-                                            size: 16.0, // Customize size
-                                          ),
-                                          Text(
-                                            '100\$',
-                                            style: TextStyle(
-                                              color: Color(0xFFA5A5A5),
-                                              fontSize: 11,
-                                              fontFamily: 'Fredoka',
-                                              fontWeight: FontWeight.w400,
-                                              height: 0.12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 120,
-                                      left: 30, // Adjust this for horizontal positioning
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          // Handle button press
-                                          print('Book Appointment button pressed');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          minimumSize: const Size(80, 10),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8), // Rounded corners
-                                            side: BorderSide(
-                                              color: Colors.transparent, // Make the border invisible
-                                              width: 0.0, // Set border width to 0.0
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5), // Button padding
-                                        ),
-                                        child: const Text(
-                                          'Book Appointment  >',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12,
-                                            fontFamily: 'Fredoka',
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.2, // Adjust height for spacing
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                // Container(
+                //   width: 350,
+                //   height: 180,
+                //   decoration: ShapeDecoration(
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(26.27),
+                //     ),
+                //     shadows: [
+                //       BoxShadow(
+                //         color: Color(0x3F000000),
+                //         blurRadius: 10,
+                //         offset: Offset(0, 4),
+                //         spreadRadius: 0,
+                //       )
+                //     ],
+                //   ),
+                //   child: Column(
+                //     mainAxisSize: MainAxisSize.min,
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //
+                //     children: [
+                //       Container(
+                //         width: 330,
+                //         height: 180,
+                //         decoration: ShapeDecoration(
+                //           color: Colors.white,
+                //           shape: RoundedRectangleBorder(
+                //             side: BorderSide(
+                //               width: 1,
+                //               strokeAlign: BorderSide.strokeAlignOutside,
+                //               color: Color(0x33A5A5A5),
+                //             ),
+                //             borderRadius: BorderRadius.circular(26.27),
+                //           ),
+                //         ),
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(10.0),
+                //           child: Row(
+                //             mainAxisSize: MainAxisSize.min,
+                //             mainAxisAlignment: MainAxisAlignment.start,
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               Container(
+                //                 width: 130,
+                //                 height: 180,
+                //                 color: Colors.blue,
+                //                 child: Column(
+                //                   mainAxisSize: MainAxisSize.min,
+                //                   mainAxisAlignment: MainAxisAlignment.start,
+                //                   crossAxisAlignment: CrossAxisAlignment.start,
+                //                   children: [
+                //                     Container(
+                //                       width: 125,
+                //                       height: 110,
+                //                       decoration: ShapeDecoration(
+                //                         image: DecorationImage(
+                //                           image: NetworkImage("https://via.placeholder.com/114x78"),
+                //                           fit: BoxFit.fill,
+                //                         ),
+                //                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                //                       ),
+                //                     ),
+                //                     const SizedBox(height: 43,),
+                //                     Text(
+                //                       'Last Visit: 25/11/2022',
+                //                       textAlign: TextAlign.right,
+                //                       style: TextStyle(
+                //                         color: Colors.black,
+                //                         fontSize: 12,
+                //                         fontFamily: 'Fredoka',
+                //                         fontWeight: FontWeight.w400,
+                //                         height: 0.12,
+                //                       ),
+                //                     ),
+                //                   ],
+                //                 ),
+                //               ),
+                //               // const SizedBox(width: 5,),
+                //               Container(
+                //                 width: 177,
+                //                 height: 180,
+                //                 color: Colors.blueGrey,
+                //                 child: Stack(
+                //                   children: [
+                //                     Positioned(
+                //                       top: 20, // Adjust top position
+                //                       left: 0, // Adjust left position
+                //                       child: Text(
+                //                         'Dr. Nambuvan',
+                //                         style: TextStyle(
+                //                           color: Colors.black,
+                //                           fontSize: 20,
+                //                           fontFamily: 'Fredoka',
+                //                           fontWeight: FontWeight.w500,
+                //                           height: 0.07,
+                //                         ),
+                //                       ),
+                //                     ),
+                //                     Positioned(
+                //                       top: 45,
+                //                       left: 0,
+                //                       child: Text(
+                //                         'Bachelor of veterinary science ',
+                //                         style: TextStyle(
+                //                           color: Color(0xFFA5A5A5),
+                //                           fontSize: 12,
+                //                           fontFamily: 'Fredoka',
+                //                           fontWeight: FontWeight.w400,
+                //                           height: 0.11,
+                //                         ),
+                //                       ),
+                //                     ),
+                //                     Positioned(
+                //                       top: 80,
+                //                       child: Row(
+                //                         children: [
+                //                           Container(
+                //                             width: 55,
+                //                             height: 16,
+                //                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                //                             decoration: ShapeDecoration(
+                //                               shape: RoundedRectangleBorder(
+                //                                 side: BorderSide(width: 1.09, color: Colors.redAccent),
+                //                                 borderRadius: BorderRadius.circular(21.89),
+                //                               ),
+                //                             ),
+                //                             child: Text(
+                //                               'Roudy',
+                //                               style: TextStyle(
+                //                                 color: Colors.white,
+                //                                 fontSize: 10,
+                //                                 fontFamily: 'Fredoka',
+                //                                 fontWeight: FontWeight.w400,
+                //                                 height: 0.19,
+                //                               ),
+                //                             ),
+                //                           ),
+                //                           const SizedBox(width: 13,),
+                //                           Icon(
+                //                             Icons.location_on,
+                //                             color: Colors.red, // Icon color
+                //                             size: 16.0, // Icon size
+                //                           ),
+                //                           const SizedBox(width: 2,),
+                //                           Text(
+                //                             '2.5 km',
+                //                             style: TextStyle(
+                //                               color: Color(0xFFA5A5A5),
+                //                               fontSize: 11,
+                //                               fontFamily: 'Fredoka',
+                //                               fontWeight: FontWeight.w400,
+                //                               height: 0.12,
+                //                             ),
+                //                           ),
+                //                           const SizedBox(width: 7,),
+                //                           Icon(
+                //                             Icons.attach_money, // Dollar icon
+                //                             color: Colors.green, // Customize color
+                //                             size: 16.0, // Customize size
+                //                           ),
+                //                           Text(
+                //                             '100\$',
+                //                             style: TextStyle(
+                //                               color: Color(0xFFA5A5A5),
+                //                               fontSize: 11,
+                //                               fontFamily: 'Fredoka',
+                //                               fontWeight: FontWeight.w400,
+                //                               height: 0.12,
+                //                             ),
+                //                           ),
+                //                         ],
+                //                       ),
+                //                     ),
+                //                     Positioned(
+                //                       top: 120,
+                //                       left: 30, // Adjust this for horizontal positioning
+                //                       child: ElevatedButton(
+                //                         onPressed: () {
+                //                           // Handle button press
+                //                           print('Book Appointment button pressed');
+                //                         },
+                //                         style: ElevatedButton.styleFrom(
+                //                           minimumSize: const Size(80, 10),
+                //                           shape: RoundedRectangleBorder(
+                //                             borderRadius: BorderRadius.circular(8), // Rounded corners
+                //                             side: BorderSide(
+                //                               color: Colors.transparent, // Make the border invisible
+                //                               width: 0.0, // Set border width to 0.0
+                //                             ),
+                //                           ),
+                //                           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5), // Button padding
+                //                         ),
+                //                         child: const Text(
+                //                           'Book Appointment  >',
+                //                           textAlign: TextAlign.center,
+                //                           style: TextStyle(
+                //                             color: Colors.black,
+                //                             fontSize: 12,
+                //                             fontFamily: 'Fredoka',
+                //                             fontWeight: FontWeight.w400,
+                //                             height: 1.2, // Adjust height for spacing
+                //                           ),
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ],
+                //                 ),
+                //               )
+                //             ],
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                buildHorizontalScroll(5),
               ],
             ),
           ),
           SizedBox(height: 48,),
-          // Container(
-          //   width: 412,
-          //   height: 90,
-          //   padding: const EdgeInsets.symmetric(vertical: 17.0, horizontal: 16.0),
-          //   decoration: ShapeDecoration(
-          //     color: Colors.green,
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(0),
-          //     ),
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Container(
-          //         width: 65,
-          //         height: 60,
-          //         decoration: ShapeDecoration(
-          //           color: Colors.green[800],
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //         ),
-          //         child: Column(
-          //           children: [
-          //             Icon(
-          //               Icons.home, // Home icon
-          //               size: 32, // Icon size
-          //               color: Colors.white, // Icon color
-          //             ),
-          //             const SizedBox(height: 4), // Space between icon and text
-          //             const Text(
-          //               "Home",
-          //               style: TextStyle(
-          //                 fontSize: 14, // Text size
-          //                 color: Colors.white, // Text color
-          //                 fontWeight: FontWeight.w500, // Optional: medium weight
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       const SizedBox(width: 12,),
-          //       Container(
-          //         width: 65,
-          //         height: 60,
-          //         decoration: ShapeDecoration(
-          //           color: Colors.green,
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //         ),
-          //         child: Column(
-          //           children: [
-          //             Icon(
-          //               Icons.explore, // Home icon
-          //               size: 32, // Icon size
-          //               color: Colors.white, // Icon color
-          //             ),
-          //             const SizedBox(height: 4), // Space between icon and text
-          //             const Text(
-          //               "Explore",
-          //               style: TextStyle(
-          //                 fontSize: 14, // Text size
-          //                 color: Colors.white, // Text color
-          //                 fontWeight: FontWeight.w500, // Optional: medium weight
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       const SizedBox(width: 12,),
-          //       Container(
-          //         width: 65,
-          //         height: 60,
-          //         decoration: ShapeDecoration(
-          //           color: Colors.green,
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //         ),
-          //         child: Column(
-          //           children: [
-          //             Icon(
-          //               Icons.map, // Home icon
-          //               size: 32, // Icon size
-          //               color: Colors.white, // Icon color
-          //             ),
-          //             const SizedBox(height: 4), // Space between icon and text
-          //             const Text(
-          //               "Explore",
-          //               style: TextStyle(
-          //                 fontSize: 14, // Text size
-          //                 color: Colors.white, // Text color
-          //                 fontWeight: FontWeight.w500, // Optional: medium weight
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       const SizedBox(width: 12,),
-          //       Container(
-          //         width: 65,
-          //         height: 60,
-          //         decoration: ShapeDecoration(
-          //           color: Colors.green,
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //         ),
-          //         child: Column(
-          //           children: [
-          //             Icon(
-          //               Icons.settings, // Home icon
-          //               size: 32, // Icon size
-          //               color: Colors.white, // Icon color
-          //             ),
-          //             const SizedBox(height: 4), // Space between icon and text
-          //             const Text(
-          //               "Manage",
-          //               style: TextStyle(
-          //                 fontSize: 14, // Text size
-          //                 color: Colors.white, // Text color
-          //                 fontWeight: FontWeight.w500, // Optional: medium weight
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       const SizedBox(width: 12,),
-          //       Container(
-          //         width: 65,
-          //         height: 60,
-          //         decoration: ShapeDecoration(
-          //           color: Colors.green,
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //         ),
-          //         child: Column(
-          //           children: [
-          //             Icon(
-          //               Icons.person, // Home icon
-          //               size: 32, // Icon size
-          //               color: Colors.white, // Icon color
-          //             ),
-          //             const SizedBox(height: 4), // Space between icon and text
-          //             const Text(
-          //               "Profile",
-          //               style: TextStyle(
-          //                 fontSize: 14, // Text size
-          //                 color: Colors.white, // Text color
-          //                 fontWeight: FontWeight.w500, // Optional: medium weight
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           Container(
             width: 412,
             height: 90,
