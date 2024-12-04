@@ -7,6 +7,40 @@ class DashboardPage extends StatefulWidget {
   State<DashboardPage> createState() => dashboardPageState();
 }
 
+class IconHelper{
+  static Widget buildIconWithLabel(IconData icon, String label, Color color) {
+    return Container(
+      width: 65,
+      height: 60,
+      decoration: ShapeDecoration(
+        color: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 32,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class dashboardPageState extends State<DashboardPage> {
 
   @override
@@ -18,7 +52,6 @@ class dashboardPageState extends State<DashboardPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Container(
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
@@ -585,6 +618,167 @@ class dashboardPageState extends State<DashboardPage> {
             ),
           ),
           SizedBox(height: 48,),
+          // Container(
+          //   width: 412,
+          //   height: 90,
+          //   padding: const EdgeInsets.symmetric(vertical: 17.0, horizontal: 16.0),
+          //   decoration: ShapeDecoration(
+          //     color: Colors.green,
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(0),
+          //     ),
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Container(
+          //         width: 65,
+          //         height: 60,
+          //         decoration: ShapeDecoration(
+          //           color: Colors.green[800],
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //         ),
+          //         child: Column(
+          //           children: [
+          //             Icon(
+          //               Icons.home, // Home icon
+          //               size: 32, // Icon size
+          //               color: Colors.white, // Icon color
+          //             ),
+          //             const SizedBox(height: 4), // Space between icon and text
+          //             const Text(
+          //               "Home",
+          //               style: TextStyle(
+          //                 fontSize: 14, // Text size
+          //                 color: Colors.white, // Text color
+          //                 fontWeight: FontWeight.w500, // Optional: medium weight
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       const SizedBox(width: 12,),
+          //       Container(
+          //         width: 65,
+          //         height: 60,
+          //         decoration: ShapeDecoration(
+          //           color: Colors.green,
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //         ),
+          //         child: Column(
+          //           children: [
+          //             Icon(
+          //               Icons.explore, // Home icon
+          //               size: 32, // Icon size
+          //               color: Colors.white, // Icon color
+          //             ),
+          //             const SizedBox(height: 4), // Space between icon and text
+          //             const Text(
+          //               "Explore",
+          //               style: TextStyle(
+          //                 fontSize: 14, // Text size
+          //                 color: Colors.white, // Text color
+          //                 fontWeight: FontWeight.w500, // Optional: medium weight
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       const SizedBox(width: 12,),
+          //       Container(
+          //         width: 65,
+          //         height: 60,
+          //         decoration: ShapeDecoration(
+          //           color: Colors.green,
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //         ),
+          //         child: Column(
+          //           children: [
+          //             Icon(
+          //               Icons.map, // Home icon
+          //               size: 32, // Icon size
+          //               color: Colors.white, // Icon color
+          //             ),
+          //             const SizedBox(height: 4), // Space between icon and text
+          //             const Text(
+          //               "Explore",
+          //               style: TextStyle(
+          //                 fontSize: 14, // Text size
+          //                 color: Colors.white, // Text color
+          //                 fontWeight: FontWeight.w500, // Optional: medium weight
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       const SizedBox(width: 12,),
+          //       Container(
+          //         width: 65,
+          //         height: 60,
+          //         decoration: ShapeDecoration(
+          //           color: Colors.green,
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //         ),
+          //         child: Column(
+          //           children: [
+          //             Icon(
+          //               Icons.settings, // Home icon
+          //               size: 32, // Icon size
+          //               color: Colors.white, // Icon color
+          //             ),
+          //             const SizedBox(height: 4), // Space between icon and text
+          //             const Text(
+          //               "Manage",
+          //               style: TextStyle(
+          //                 fontSize: 14, // Text size
+          //                 color: Colors.white, // Text color
+          //                 fontWeight: FontWeight.w500, // Optional: medium weight
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       const SizedBox(width: 12,),
+          //       Container(
+          //         width: 65,
+          //         height: 60,
+          //         decoration: ShapeDecoration(
+          //           color: Colors.green,
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20),
+          //           ),
+          //         ),
+          //         child: Column(
+          //           children: [
+          //             Icon(
+          //               Icons.person, // Home icon
+          //               size: 32, // Icon size
+          //               color: Colors.white, // Icon color
+          //             ),
+          //             const SizedBox(height: 4), // Space between icon and text
+          //             const Text(
+          //               "Profile",
+          //               style: TextStyle(
+          //                 fontSize: 14, // Text size
+          //                 color: Colors.white, // Text color
+          //                 fontWeight: FontWeight.w500, // Optional: medium weight
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
             width: 412,
             height: 90,
@@ -592,157 +786,22 @@ class dashboardPageState extends State<DashboardPage> {
             decoration: ShapeDecoration(
               color: Colors.green,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(0),
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 65,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Colors.green[800],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.home, // Home icon
-                        size: 32, // Icon size
-                        color: Colors.white, // Icon color
-                      ),
-                      const SizedBox(height: 4), // Space between icon and text
-                      const Text(
-                        "Home",
-                        style: TextStyle(
-                          fontSize: 14, // Text size
-                          color: Colors.white, // Text color
-                          fontWeight: FontWeight.w500, // Optional: medium weight
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12,),
-                Container(
-                  width: 65,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.explore, // Home icon
-                        size: 32, // Icon size
-                        color: Colors.white, // Icon color
-                      ),
-                      const SizedBox(height: 4), // Space between icon and text
-                      const Text(
-                        "Explore",
-                        style: TextStyle(
-                          fontSize: 14, // Text size
-                          color: Colors.white, // Text color
-                          fontWeight: FontWeight.w500, // Optional: medium weight
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12,),
-                Container(
-                  width: 65,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.map, // Home icon
-                        size: 32, // Icon size
-                        color: Colors.white, // Icon color
-                      ),
-                      const SizedBox(height: 4), // Space between icon and text
-                      const Text(
-                        "Explore",
-                        style: TextStyle(
-                          fontSize: 14, // Text size
-                          color: Colors.white, // Text color
-                          fontWeight: FontWeight.w500, // Optional: medium weight
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12,),
-                Container(
-                  width: 65,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.settings, // Home icon
-                        size: 32, // Icon size
-                        color: Colors.white, // Icon color
-                      ),
-                      const SizedBox(height: 4), // Space between icon and text
-                      const Text(
-                        "Manage",
-                        style: TextStyle(
-                          fontSize: 14, // Text size
-                          color: Colors.white, // Text color
-                          fontWeight: FontWeight.w500, // Optional: medium weight
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12,),
-                Container(
-                  width: 65,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.person, // Home icon
-                        size: 32, // Icon size
-                        color: Colors.white, // Icon color
-                      ),
-                      const SizedBox(height: 4), // Space between icon and text
-                      const Text(
-                        "Profile",
-                        style: TextStyle(
-                          fontSize: 14, // Text size
-                          color: Colors.white, // Text color
-                          fontWeight: FontWeight.w500, // Optional: medium weight
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                IconHelper.buildIconWithLabel(Icons.home, "Home", Colors.green[800]!),
+                const SizedBox(width: 12),
+                IconHelper.buildIconWithLabel(Icons.explore, "Explore", Colors.green),
+                const SizedBox(width: 12),
+                IconHelper.buildIconWithLabel(Icons.map, "Map", Colors.green),
+                const SizedBox(width: 12),
+                IconHelper.buildIconWithLabel(Icons.settings, "Manage", Colors.green),
+                const SizedBox(width: 12),
+                IconHelper.buildIconWithLabel(Icons.person, "Profile", Colors.green),
               ],
             ),
           ),
@@ -750,5 +809,7 @@ class dashboardPageState extends State<DashboardPage> {
       ),
     );
   }
+  // Helper method to create the icon and label containers
+
 }
 

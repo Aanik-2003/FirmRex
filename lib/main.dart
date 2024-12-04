@@ -1,4 +1,5 @@
 import 'package:firm_rex/views/loginpage.dart';
+import 'package:firm_rex/views/pet_health.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: PetHealth(),
       debugShowCheckedModeBanner: false,
     );
   }
