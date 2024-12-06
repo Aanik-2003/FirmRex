@@ -3,7 +3,9 @@ import 'package:firm_rex/views/loginpage.dart';
 import 'package:firm_rex/views/medical_records.dart';
 import 'package:firm_rex/views/pet_health.dart';
 import 'package:firm_rex/views/pet_profile.dart';
+import 'package:firm_rex/views/signuppage.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
+import 'package:firm_rex/wrapper.dart';
 import 'package:flutter/material.dart';
 
 void main() async{
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DashboardPage(selectedIndex: 0,),
+      home: Wrapper(),
       debugShowCheckedModeBanner: false,
     );
   }

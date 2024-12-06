@@ -1,24 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/auth/user_auth.dart';
-import 'package:firm_rex/views/signuppage.dart';
-import 'package:firm_rex/views/user_dashboard.dart';
-import 'package:esewa_flutter_sdk/esewa_config.dart';
-import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
-import 'package:esewa_flutter_sdk/esewa_payment.dart';
-import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'loginpage.dart';
 
-class LoginPage extends StatefulWidget {
+
+class Signuppage extends StatefulWidget {
   @override
-  State<LoginPage> createState() {
-    return LoginPageState();
+  State<Signuppage> createState() {
+    return SignUpPageState();
   }
 }
 
-
-class LoginPageState extends State<LoginPage> {
+class SignUpPageState extends State<Signuppage> {
 
   final _auth = UserAuth();
 
@@ -31,41 +25,6 @@ class LoginPageState extends State<LoginPage> {
     _user_email.dispose();
     _user_password.dispose();
   }
-
-  @override
-  void initState(){
-    super.initState();
-    // GetApi().getNewsApiCall();
-  }
-
-  // esewapaymentcall(){
-  //   try {
-  //     EsewaFlutterSdk.initPayment(
-  //       esewaConfig: EsewaConfig(
-  //         environment: Environment.test,
-  //         clientId: StaticValue.CLIENT_ID,
-  //         secretId: StaticValue.SECRET_KEY,
-  //       ),
-  //       esewaPayment: EsewaPayment(
-  //         productId: "1d71jd81",
-  //         productName: "Product One",
-  //         productPrice: "20", callbackUrl: '',
-  //       ),
-  //       onPaymentSuccess: (EsewaPaymentSuccessResult data) {
-  //         debugPrint(":::SUCCESS::: => $data");
-  //         // verifyTransactionStatus(data);
-  //       },
-  //       onPaymentFailure: (data) {
-  //         debugPrint(":::FAILURE::: => $data");
-  //       },
-  //       onPaymentCancellation: (data) {
-  //         debugPrint(":::CANCELLATION::: => $data");
-  //       },
-  //     );
-  //   } on Exception catch (e) {
-  //     debugPrint("EXCEPTION : ${e.toString()}");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +66,17 @@ class LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: [
                           TextField(
+                            // controller: _user_email,
+                            decoration: InputDecoration(
+                              labelText: "Full Name",
+                              prefixIcon: const Icon(Icons.person),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10,),
+                          TextField(
                             controller: _user_email,
                             decoration: InputDecoration(
                               labelText: "Email Address",
@@ -128,37 +98,29 @@ class LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 15),
+                          TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: "Retype Password",
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 20),
 
-                    // Forgot Password
-                    Padding(
-                      padding: const EdgeInsets.only(left: 200.0),
-                      child: SizedBox(
-                        width: 232,
-                        child: Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Color(0xFFF67E27),
-                            fontSize: 16,
-                            fontFamily: 'Fredoka',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 25),
-
-                    // Login button
+                    // Sign Up button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: _login,
+                          onPressed: _signUp,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             shape: RoundedRectangleBorder(
@@ -166,7 +128,7 @@ class LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           child: const Text(
-                            "LOGIN",
+                            "SIGN UP",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -175,11 +137,11 @@ class LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 5),
                     RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: "Already have an account? ",
                         style: const TextStyle(color: Colors.black, fontSize: 16),
                         children: [
                           TextSpan(
-                            text: "SignUp",
+                            text: "Login",
                             style: const TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
@@ -190,7 +152,7 @@ class LoginPageState extends State<LoginPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Signuppage(), // Replace with your LoginPage widget
+                                    builder: (context) => LoginPage(), // Replace with your LoginPage widget
                                   ),
                                 );
                               },
@@ -198,7 +160,6 @@ class LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 10,),
 
                     // Google Connect button
@@ -206,7 +167,7 @@ class LoginPageState extends State<LoginPage> {
                       "Or Connect With",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: SizedBox(
@@ -224,13 +185,13 @@ class LoginPageState extends State<LoginPage> {
                             width: 22, // Set the size of the logo
                             height: 22,
                           ),
-                          label: const Text("Google"),
+                          label: const Text("Login With Google"),
                         ),
                       ),
                     ),
 
                     // Footer section
-                    SizedBox(height: size.height/12),
+                    SizedBox(height: size.height/25),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
@@ -248,12 +209,11 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  _login() async {
-    await _auth.loginUserWithEmailAndPassword(
+  _signUp() async {
+    await _auth.createUserWithEmailAndPassword(
       _user_email.text,
       _user_password.text,
       context,
     );
   }
-
 }

@@ -1,6 +1,9 @@
+import 'package:firm_rex/auth/user_auth.dart';
 import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
+
+import 'loginpage.dart';
 
 // void main() => runApp(MyApp());
 
@@ -24,6 +27,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile>{
+  final _auth = UserAuth();
   int selectedIndex;
 
   _UserProfileState() : selectedIndex = 0;
@@ -193,7 +197,9 @@ class _UserProfileState extends State<UserProfile>{
                             ),
                             const SizedBox(height: 10),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () async{
+                                await _auth.signOut(context);
+                              },
                               child: const Text(
                                 "Sign out",
                                 style: TextStyle(color: Colors.red),
