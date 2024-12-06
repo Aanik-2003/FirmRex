@@ -1,8 +1,4 @@
-import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-import '../model/newsapi.dart';
-import '../views/static.dart';
 
 // class GetApi {
 //   // function

@@ -28,7 +28,7 @@ verticalScrollFunction(var size, var color) {
             height: double.infinity,
           ),
         ),
-        Center(
+        const Center(
           child: Icon(
             Icons.play_circle,
             size: 50, // Adjust the size as needed
@@ -38,9 +38,9 @@ verticalScrollFunction(var size, var color) {
         Positioned(
           bottom: 50,
           left: 50,
-          child: Container(
+          child: SizedBox(
             width: size.width / 2,
-            child: Text(
+            child: const Text(
               "Sept 20, 2024",
               style: TextStyle(
                   color: Colors.black,
@@ -61,12 +61,12 @@ class _detailsPageState extends State<DetailsPage> {
     return Container(
       width: size.width / 1.05,
       height: size.height / 5,
-      margin: EdgeInsets.only(left: 0, right: 0),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(
           color: Color(color), borderRadius: BorderRadius.circular(20)),
       child: Stack(
         children: [
-          Container(
+          SizedBox(
             height: size.height / 5,
             width: size.width / 1,
             child: ClipRRect(
@@ -80,7 +80,7 @@ class _detailsPageState extends State<DetailsPage> {
                   fit: BoxFit.cover,
                 )),
           ),
-          Center(
+          const Center(
               child: Icon(
             Icons.play_circle,
             size: 60,
@@ -94,7 +94,7 @@ class _detailsPageState extends State<DetailsPage> {
                 // Add your navigation code here
                 Navigator.pop(context); // Example: navigate back
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back,
                 size: 50,
                 color: Colors.white,
@@ -102,7 +102,7 @@ class _detailsPageState extends State<DetailsPage> {
             ),
           ),
 
-          Positioned(
+          const Positioned(
               right: 5,
               top: 5,
               child: Icon(
@@ -124,7 +124,7 @@ class _detailsPageState extends State<DetailsPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             height: size.height / 5,
             width: size.width / 1,
             child: ListView.builder(
@@ -137,13 +137,13 @@ class _detailsPageState extends State<DetailsPage> {
           ),
           Container(
             width: size.width,
-            margin: EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.only(left: 10, right: 10),
             child: Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start, // Aligns children to the left
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                const Padding(
+                  padding: EdgeInsets.only(top: 10),
                   child: Text(
                     "First Image Of My Flutter Project."
                     "This is my new project...",
@@ -155,8 +155,8 @@ class _detailsPageState extends State<DetailsPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -184,7 +184,7 @@ class _detailsPageState extends State<DetailsPage> {
                   ),
                 ),
                 Container(
-                  child: Text(
+                  child: const Text(
                     "First Image Of My Flutter Project."
                     "This is my new project...ahfahfseahf afhesafhsajf ashfaf"
                     "auff ahfuaf afdhuajef adfh adufh",
@@ -199,7 +199,7 @@ class _detailsPageState extends State<DetailsPage> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: size.height / 2.1,
             width: size.width,
             child: ListView.builder(

@@ -21,7 +21,7 @@ class dashboardPageState extends State<DashboardPage> {
       child: Container(
         width: size.width / 1.5,
         height: size.height / 5,
-        margin: EdgeInsets.only(left: 10),
+        margin: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
           color: Color(color),
           borderRadius: BorderRadius.circular(20),
@@ -40,9 +40,9 @@ class dashboardPageState extends State<DashboardPage> {
             Positioned(
               bottom: 25,
               left: 15,
-              child: Container(
+              child: SizedBox(
                 width: size.width / 2,
-                child: Text(
+                child: const Text(
                   "First Image Of My Flutter Project. This is my new project...",
                   style: TextStyle(
                     color: Colors.white,
@@ -57,9 +57,9 @@ class dashboardPageState extends State<DashboardPage> {
             Positioned(
               bottom: 5,
               left: 15,
-              child: Container(
+              child: SizedBox(
                 width: size.width / 2,
-                child: Text(
+                child: const Text(
                   "Sept 20, 2024",
                   style: TextStyle(
                     color: Colors.white,
@@ -71,7 +71,7 @@ class dashboardPageState extends State<DashboardPage> {
                 ),
               ),
             ),
-            Positioned(
+            const Positioned(
               right: 5,
               bottom: 5,
               child: Icon(
@@ -91,7 +91,7 @@ class dashboardPageState extends State<DashboardPage> {
     return Container(
       width: size.width / 2.2,
       height: size.height / 6,
-      margin: EdgeInsets.only(top: 10, left: 10),
+      margin: const EdgeInsets.only(top: 10, left: 10),
       decoration: BoxDecoration(
         color: Color(color),
         borderRadius: BorderRadius.circular(20),
@@ -107,7 +107,7 @@ class dashboardPageState extends State<DashboardPage> {
               width: size.width / 2.2,
             ),
           ),
-          Positioned(
+          const Positioned(
             left: 60,
             bottom: 40,
             child: Icon(
@@ -119,9 +119,9 @@ class dashboardPageState extends State<DashboardPage> {
           Positioned(
             top: 25,
             right: 0,
-            child: Container(
+            child: SizedBox(
               width: size.width / 2,
-              child: Text(
+              child: const Text(
                 "First Image Of My Flutter Project. This is my new project...",
                 style: TextStyle(
                   color: Colors.black,
@@ -136,9 +136,9 @@ class dashboardPageState extends State<DashboardPage> {
           Positioned(
             bottom: 10,
             left: 300,
-            child: Container(
+            child: SizedBox(
               width: size.width / 2,
-              child: Text(
+              child: const Text(
                 "Sept 20, 2024",
                 style: TextStyle(
                   color: Colors.black,
@@ -159,12 +159,12 @@ class dashboardPageState extends State<DashboardPage> {
               },
               style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
-              minimumSize: Size(20, 40), // Set minimum width and height// Button color
+              minimumSize: const Size(20, 40), // Set minimum width and height// Button color
               shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               ),
               ),
-              child: Text("Play Now",
+              child: const Text("Play Now",
               style: TextStyle(
                 color: Colors.black
               ),),
@@ -184,7 +184,7 @@ class dashboardPageState extends State<DashboardPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             height: size.height / 5,
             width: size.width / 1,
             child: ListView.builder(
@@ -195,7 +195,7 @@ class dashboardPageState extends State<DashboardPage> {
               },
             ),
           ),
-          Container(
+          SizedBox(
             height: size.height / 1.5,
             width: size.width / 1,
             child: ListView.builder(

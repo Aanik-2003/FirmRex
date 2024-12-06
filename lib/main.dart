@@ -1,5 +1,5 @@
-import 'package:firm_rex/views/loginpage.dart';
-import 'package:firm_rex/views/map.dart';
+import 'package:firm_rex/views/doctor_profile.dart';
+import 'package:firm_rex/views/pet_profile.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginPage(),
-      debugShowCheckedModeBanner: false,
+      home: DoctorProfile(),
+      // debugShowCheckedModeBanner: false,
     );
   }
 }
