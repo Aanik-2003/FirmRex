@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:esewa_flutter_sdk/esewa_config.dart';
 import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
@@ -14,6 +15,29 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
+
+  final user_email = TextEditingController();
+  final user_password = TextEditingController();
+
+  void login_auth() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: user_email.text,
+          password: user_password.text,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: 0,)), // Correct class name
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
   @override
   void initState(){
     super.initState();
@@ -80,6 +104,7 @@ class LoginPageState extends State<LoginPage> {
                 children: [
                   SizedBox(height: 15),
                   TextField(
+                    controller: user_email,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey[300],
@@ -96,6 +121,7 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 15),
                   TextField(
+                    controller: user_password,
                     obscureText: true, // For password input
                     decoration: InputDecoration(
                       filled: true,
@@ -128,13 +154,15 @@ class LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 15),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const DashboardPage()), // Correct class name
-                      );
+                    onTap:
+                      login_auth,
+                      // Navigator.push(
+                      //   context,
+                      //
+                      //   MaterialPageRoute(builder: (context) => const DashboardPage()), // Correct class name
+                      // );
                       // esewapaymentcall();
-                    },
+
                     child: Align(
                       alignment: Alignment.center,
                       child: Container(

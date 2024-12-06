@@ -1,47 +1,67 @@
+import 'package:firm_rex/views/pet_profile.dart';
+import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  final int selectedIndex;
+
+  // Constructor to accept selectedIndex
+  const DashboardPage({super.key, required this.selectedIndex});
 
   @override
-  State<DashboardPage> createState() => dashboardPageState();
+  _DashboardPageState createState() => _DashboardPageState();
+  
 }
 
-class IconHelper{
-  static Widget buildIconWithLabel(IconData icon, String label, Color color) {
-    return Container(
-      width: 65,
-      height: 60,
-      decoration: ShapeDecoration(
-        color: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 32,
-            color: Colors.white,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
+class _DashboardPageState extends State<DashboardPage> {
+  int selectedIndex = 0; // Current selected index for BottomNavigationBar
+
+  _DashboardPageState() : selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index; // Update selected index on button tap
+    });
+    switch (index) {
+      case 0:
+      // Navigate to Home page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: selectedIndex,)),
+        );
+        break;
+      case 1:
+      // Navigate to Explore page
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => ExplorePage()),
+      //   );
+        break;
+      case 2:
+      // Navigate to Map page
+      //   Navigator.push(
+      //     context,
+          // MaterialPageRoute(builder: (context) => MapPage()),
+      //   );
+        break;
+      case 3:
+      // Navigate to Manage page
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => ManagePage()),
+      //   );
+        break;
+      case 4:
+      // Navigate to Profile page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: selectedIndex,)),
+        );
+        break;
+    }
   }
-}
 
-class dashboardPageState extends State<DashboardPage> {
+  @override
   Widget buildHorizontalScroll(int itemCount){
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -276,19 +296,19 @@ class dashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.only(top:16.0),
             decoration: BoxDecoration(
               color: Colors.green, // Set background color to green
               borderRadius: BorderRadius.circular(0), // Optional rounded corners
             ),
-            child: Container(
-              height: size.height / 12,
+            child:
+            Container(
+              height: size.height / 11,
               width: size.width,
               decoration: BoxDecoration(
                 color: Colors.green, // Background color for visibility
@@ -299,11 +319,11 @@ class dashboardPageState extends State<DashboardPage> {
                   // Text at Bottom Left
                   Positioned(
                     bottom: 5,
-                    left: 10,
+                    left: 15,
                     child: Text(
                       "Hello, Aanik!",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -311,23 +331,20 @@ class dashboardPageState extends State<DashboardPage> {
                   ),
                   // Image at Bottom Right
                   Positioned(
-                    bottom: 0,
+                    bottom: 5,
                     right: 10,
                     child: Container(
                       height: size.height / 16,
-                      width: size.width / 7,
+                      width: size.width / 8,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.grey.shade300, // Optional background color
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10), // Equal padding of 2
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15), // Adjust to maintain rounded edges
-                          child: Image.asset(
-                            "images/logo.jpeg",
-                            fit: BoxFit.cover,
-                          ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15), // Adjust to maintain rounded edges
+                        child: Image.asset(
+                          "images/logo.jpeg",
+                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
@@ -336,14 +353,14 @@ class dashboardPageState extends State<DashboardPage> {
               ),
             ),
           ),
-          SizedBox(height: 20,),
+          SizedBox(height: size.height/35,),
           Container(
-            width: 397,
-            height: 220,
+            width: size.width,
+            height: size.height / 4,
             padding: const EdgeInsets.only(
-              top: 16,
+              top: 25,
               left: 21.89,
-              right: 21.89,
+              right: 18,
               bottom: 21.89,
             ),
             decoration: ShapeDecoration(
@@ -366,30 +383,13 @@ class dashboardPageState extends State<DashboardPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(right: 21.89, bottom: 8.76),
+                  width: size.width,
+                  padding: const EdgeInsets.only(left: 10, bottom: 8.76),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 26.27,
-                        height: 60,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 26.27,
-                              height: 100,
-                              child: Stack(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8.76),
                       Expanded(
                         child: SizedBox(
                           child: Text(
@@ -407,129 +407,139 @@ class dashboardPageState extends State<DashboardPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: size.height / 30),
+
+                // Image and button section
                 Container(
-                  height: 78,
+                  width: size.width,
+                  height: size.height / 10,
+                  padding: const EdgeInsets.only(left: 12),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 90,
-                        height: 90,
-                        decoration: ShapeDecoration(
-                          color: Color(0xFF7A86AE),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                      GestureDetector(
+                        onTap: () {
+                          // Logic for first image
+                          print("First pet image tapped!");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PetProfile(selectedIndex: 4,)),
+                          );
+                        },
+                        child: Container(
+                          width: size.width / 5,
+                          height: size.height / 10,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFF7A86AE),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            shadows: [
+                              BoxShadow(
+                                color: Color(0x3F000000),
+                                blurRadius: 4,
+                                offset: Offset(0, 4),
+                                spreadRadius: 0,
+                              )
+                            ],
                           ),
-                          shadows: [
-                            BoxShadow(
-                              color: Color(0x3F000000),
-                              blurRadius: 4,
-                              offset: Offset(0, 4),
-                              spreadRadius: 0,
-                            )
-                          ],
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 0,
-                              top: 0,
-                              child: Container(
-                                width: 90,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage("https://i.pinimg.com/736x/2d/bb/a9/2dbba9862aef7279188d60b27d5ef458.jpg"),
-                                    fit: BoxFit.contain,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                child: Container(
+                                  width: size.width / 5,
+                                  height: size.height / 10,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          "https://i.pinimg.com/736x/2d/bb/a9/2dbba9862aef7279188d60b27d5ef458.jpg"),
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 24),
-                      Container(
-                        width: 90,
-                        height: 90,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 90,
-                              height: 90,
-                              child: Stack(
-                                children: [
-                                  //roudy
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 90,
-                                      height: 90,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage("https://i.pinimg.com/736x/25/21/aa/2521aaed6a2594cae2fa64fc00a3fdb5.jpg"),
-                                          fit: BoxFit.contain,
+                      SizedBox(width: size.width / 25),
+                      GestureDetector(
+                        onTap: () {
+                          // Logic for second image
+                          print("Second pet image tapped!");
+                        },
+                        child: Container(
+                          width: size.width / 5,
+                          height: size.height / 10,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: size.width / 5,
+                                height: size.height / 10,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 0,
+                                      top: 0,
+                                      child: Container(
+                                        width: size.width / 5,
+                                        height: size.height / 10,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                "https://i.pinimg.com/736x/25/21/aa/2521aaed6a2594cae2fa64fc00a3fdb5.jpg"),
+                                            fit: BoxFit.contain,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-
+                                  ],
+                                ),
                               ),
-
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: size.width / 25),
+                      SizedBox(
+                        width: size.width / 12, // Equal width
+                        height: size.width / 12, // Equal height to make it square
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15), // Rounded corners
                             ),
-
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 24),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15), // Rounded corners
+                            padding: EdgeInsets.zero, // No padding to fit the image perfectly
+                            backgroundColor: Colors.transparent, // Make the button's background invisible
                           ),
-                          padding: EdgeInsets.zero, // No padding to fit the image perfectly
-                          backgroundColor: Colors.transparent, // Make the button's background invisible
-                        ),
-                        onPressed: () {
-                          // Button action
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15), // Match the button's corner radius
-                          child: Image.asset(
-                            "images/plus_icon.jpg",
-                            fit: BoxFit.cover,
-                            width: 60, // Button width
-                            height: 60, // Button height
+                          onPressed: () {
+                            // Button action
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15), // Match the button's corner radius
+                            child: Image.asset(
+                              "images/plus_icon.jpg",
+                              fit: BoxFit.cover,
+                              width: size.width / 13, // Match the button's width
+                              height: size.width / 13, // Match the button's height
+                            ),
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: size.height / 90),
                 Container(
-                  padding: const EdgeInsets.only(top: 8, left: 15, right: 128),
-                  // decoration: BoxDecoration(
-                  //   boxShadow: [
-                  //     BoxShadow(
-                  //       color: Color(0x3F000000),
-                  //       blurRadius: 4,
-                  //       offset: Offset(0, 4),
-                  //       spreadRadius: 0,
-                  //     )
-                  //   ],
-                  // ),
+                  padding: const EdgeInsets.only(top: 8, left: 21),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -543,7 +553,7 @@ class dashboardPageState extends State<DashboardPage> {
                           height: 0.09,
                         ),
                       ),
-                      const SizedBox(width: 79),
+                      SizedBox(width: size.width / 9),
                       Text(
                         'Roudy',
                         style: TextStyle(
@@ -560,16 +570,16 @@ class dashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          SizedBox(height: 50,),
+
+          SizedBox(height: size.height/35,),
           Container(
-            width: 400,
-            height: 275,
-            margin: new EdgeInsets.symmetric(horizontal: 20.0),
+            width: size.width,
+            height: size.height/2.39,
             padding: const EdgeInsets.only(
               top: 16,
-              left: 21.89,
-              right: 21.89,
-              bottom: 29,
+              left: 10,
+              right: 10,
+              bottom: 16,
             ),
             decoration: ShapeDecoration(
               color: Colors.red.withOpacity(0.4000000059604645),
@@ -591,7 +601,7 @@ class dashboardPageState extends State<DashboardPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: double.infinity,
+                  width: size.width,
                   padding: const EdgeInsets.only(right: 21.89, bottom: 8.76),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -847,32 +857,36 @@ class dashboardPageState extends State<DashboardPage> {
               ],
             ),
           ),
-          SizedBox(height: 48,),
-          Container(
-            width: 412,
-            height: 90,
-            padding: const EdgeInsets.symmetric(vertical: 17.0, horizontal: 16.0),
-            decoration: ShapeDecoration(
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconHelper.buildIconWithLabel(Icons.home, "Home", Colors.green[800]!),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.explore, "Explore", Colors.green),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.map, "Map", Colors.green),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.settings, "Manage", Colors.green),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.person, "Profile", Colors.green),
-              ],
-            ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.green,
+        selectedItemColor: Colors.green[800],
+        unselectedItemColor: Colors.green[200],
+        showSelectedLabels: true, // Show labels for selected items
+        currentIndex: selectedIndex, // Highlight the selected item
+        onTap: _onItemTapped, // Update the state on tap
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Manage',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

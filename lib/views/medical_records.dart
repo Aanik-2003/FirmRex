@@ -205,7 +205,7 @@ class MedicalRecords extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => PetHealth()),
+                            MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 4,)),
                           );
                         },
                         child: const Text(
@@ -423,33 +423,7 @@ class MedicalRecords extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 10,),
-          Container(
-            width: 412,
-            height: 90,
-            padding: const EdgeInsets.symmetric(vertical: 17.0, horizontal: 16.0),
-            decoration: ShapeDecoration(
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconHelper.buildIconWithLabel(Icons.home, 'Home', Colors.green,),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.explore, "Explore", Colors.green),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.map, "Map", Colors.green),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.settings, "Manage", Colors.green),
-                const SizedBox(width: 12),
-                IconHelper.buildIconWithLabel(Icons.person, "Profile", Colors.green),
-              ],
-            ),
-          ),
+
         ],
       ),
     );

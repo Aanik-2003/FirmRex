@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "713479061757",
+    "project_id": "firm-rex",
+    "storage_bucket": "firm-rex.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713479061757:android:2c904eb657bee06b2ffe94",
+        "android_client_info": {
+          "package_name": "com.example.firm_rex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj7E0dLCw1nyXNqr_EVl2YkHU8BYQflE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,10 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firm_rex/views/loginpage.dart';
 import 'package:firm_rex/views/medical_records.dart';
 import 'package:firm_rex/views/pet_health.dart';
+import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MedicalRecords(),
+      home: DashboardPage(selectedIndex: 0,),
       debugShowCheckedModeBanner: false,
     );
   }
