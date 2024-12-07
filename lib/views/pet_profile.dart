@@ -1,3 +1,4 @@
+import 'package:firm_rex/model/pet_profile_edit.dart';
 import 'package:firm_rex/views/pet_health.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:firm_rex/views/user_profile.dart';
@@ -71,6 +72,7 @@ class _PetProfileState extends State<PetProfile> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -134,25 +136,83 @@ class _PetProfileState extends State<PetProfile> {
                   },
                 ),
               ),
-              const Positioned(
-                top: 40,
-                right: 16,
-                child: Icon(Icons.more_vert, color: Colors.white),
-              ),
             ],
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10,),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ListView(
                 children: [
-                  const SizedBox(height: 40),
-                  const Text(
-                    "About Bella",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 8,
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(26),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
                     ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // User Name Section
+                        Text(
+                          'Bella',
+                          style: TextStyle(
+                            color: Color(0xFF131314),
+                            fontSize: 26,
+                            fontFamily: 'Fredoka',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        // Button Section
+                        Container(
+                          padding: const EdgeInsets.all(9),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF576AC),
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          child: Icon(
+                            Icons.female, // Example icon, replace with your asset if needed
+                            size: 22,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // About Bella with Edit Button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "About Bella",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      // Edit Icon or Edit Text Button
+                      IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return EditPetProfile();
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -182,10 +242,11 @@ class _PetProfileState extends State<PetProfile> {
                   ),
                   const SizedBox(height: 10),
                   Container(
+                    width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(26),
                       boxShadow: const [
                         BoxShadow(
                           color: Colors.black12,
@@ -196,8 +257,7 @@ class _PetProfileState extends State<PetProfile> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.health_and_safety, color: Colors.red,
-                            size: 40),
+                        const Icon(Icons.health_and_safety, color: Colors.red, size: 40),
                         const SizedBox(width: 16),
                         const Expanded(
                           child: Text(
@@ -209,11 +269,15 @@ class _PetProfileState extends State<PetProfile> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 3,)),
+                              MaterialPageRoute(
+                                builder: (context) => PetHealth(selectedIndex: 3),
+                              ),
                             );
                           },
-                          child: const Text("View", style: TextStyle(
-                              color: Colors.red)),
+                          child: const Text(
+                            "View",
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                     ),
