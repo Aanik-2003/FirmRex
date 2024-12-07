@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DoctorProfile extends StatelessWidget {
+  const DoctorProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +28,6 @@ class DoctorProfile extends StatelessWidget {
             ),
           ],
       ),
-
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +38,7 @@ class DoctorProfile extends StatelessWidget {
                   height: 200,
                   color: Colors.blue,
                 ),
-                Positioned(
+                const Positioned(
                   left: 20,
                   right: 20,
                   bottom: 0,
@@ -50,59 +51,59 @@ class DoctorProfile extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 80),
+            const SizedBox(height: 80),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Dr. John Doe',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     'Cardiologist',
                     style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                   ),
-                  Divider(thickness: 1, height: 40),
-                  Text(
+                  const Divider(thickness: 1, height: 40),
+                  const Text(
                     'Experience',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     '10 years of experience in cardiology, specializing in heart surgeries and patient care.',
                     style: TextStyle(fontSize: 16),
                   ),
-                  Divider(thickness: 1, height: 40),
-                  Text(
+                  const Divider(thickness: 1, height: 40),
+                  const Text(
                     'Qualifications',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     '- MBBS from XYZ University\n- MD in Cardiology from ABC Institute',
                     style: TextStyle(fontSize: 16),
                   ),
-                  Divider(thickness: 1, height: 40),
-                  Text(
+                  const Divider(thickness: 1, height: 40),
+                  const Text(
                     'Contact Information',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
-                  ListTile(
+                  const SizedBox(height: 10),
+                  const ListTile(
                     leading: Icon(Icons.phone),
                     title: Text('+1 234 567 890'),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.email),
                     title: Text('dr.john.doe@example.com'),
                   ),
-                  ListTile(
+                  const ListTile(
                     leading: Icon(Icons.location_on),
                     title: Text('1234 Heart Lane, Health City, TX'),
                   ),

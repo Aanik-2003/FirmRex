@@ -115,6 +115,10 @@ class UserProfile extends StatelessWidget {
                               style: TextStyle(color: Colors.grey[600]),
                             ),
                             Text(
+                              'Ekantakuna,Lalitpur',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                            Text(
                               '0758519048',
                               style: TextStyle(color: Colors.grey[600]),
                             ),
@@ -129,18 +133,6 @@ class UserProfile extends StatelessWidget {
                           ],
                         ),
                         const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.info_outline, color: Colors.green),
-                          title: const Text("About me"),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {},
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.location_on_outlined, color: Colors.green),
-                          title: const Text("My Address"),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {},
-                        ),
                         ListTile(
                           leading: const Icon(Icons.pets, color: Colors.green),
                           title: const Text("Add Pet"),
