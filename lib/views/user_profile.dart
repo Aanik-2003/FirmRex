@@ -1,9 +1,4 @@
-import 'package:firm_rex/auth/user_auth.dart';
-import 'package:firm_rex/views/pet_profile.dart';
-import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
-
-import 'loginpage.dart';
 
 // void main() => runApp(MyApp());
 
@@ -17,102 +12,31 @@ import 'loginpage.dart';
 //   }
 // }
 
-class UserProfile extends StatefulWidget {
-  final int selectedIndex;
-
-  const UserProfile({super.key, required this.selectedIndex});
-
-  @override
-  _UserProfileState createState() => _UserProfileState();
-}
-
-class _UserProfileState extends State<UserProfile>{
-  final _auth = UserAuth();
-  int selectedIndex;
-
-  _UserProfileState() : selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedIndex = widget
-        .selectedIndex; // Set the initial selected index from the constructor
-  }
-
-
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index; // Update selected index on button tap
-    });
-    switch (index) {
-      case 0:
-      // Navigate to Home page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: selectedIndex,)),
-        );
-        break;
-      case 1:
-      // Navigate to Explore page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ExplorePage()),
-      // );
-        break;
-      case 2:
-      // Navigate to Map page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => MapPage()),
-      // );
-        break;
-      case 3:
-      // Navigate to Manage page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ManagePage()),
-      // );
-        break;
-      case 4:
-      // Navigate to Profile page (this is already the current page)
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PetProfile(selectedIndex: selectedIndex)),
-        );
-        break;
-    }
-  }
+class UserProfile extends StatelessWidget {
+  const UserProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.green,
-        selectedItemColor: Colors.green[800],
-        unselectedItemColor: Colors.green[200],
-        showSelectedLabels: true,
-        // Show labels for selected items
-        currentIndex: selectedIndex,
-        // Highlight the selected item
-        onTap: _onItemTapped,
-        // Update the state on tap
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
+            icon: Icon(Icons.search),
+            label: 'Discover',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pets),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.manage_accounts),
             label: 'Manage',
           ),
           BottomNavigationBarItem(
@@ -136,8 +60,7 @@ class _UserProfileState extends State<UserProfile>{
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: const Icon(
-                            Icons.arrow_back_ios, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
                         onPressed: () {},
                       ),
                       const Text(
@@ -197,9 +120,7 @@ class _UserProfileState extends State<UserProfile>{
                             ),
                             const SizedBox(height: 10),
                             TextButton(
-                              onPressed: () async{
-                                await _auth.signOut(context);
-                              },
+                              onPressed: () {},
                               child: const Text(
                                 "Sign out",
                                 style: TextStyle(color: Colors.red),
@@ -209,15 +130,13 @@ class _UserProfileState extends State<UserProfile>{
                         ),
                         const Divider(),
                         ListTile(
-                          leading: const Icon(Icons.info_outline, color: Colors
-                              .green),
+                          leading: const Icon(Icons.info_outline, color: Colors.green),
                           title: const Text("About me"),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {},
                         ),
                         ListTile(
-                          leading: const Icon(
-                              Icons.location_on_outlined, color: Colors.green),
+                          leading: const Icon(Icons.location_on_outlined, color: Colors.green),
                           title: const Text("My Address"),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {},
@@ -240,4 +159,3 @@ class _UserProfileState extends State<UserProfile>{
     );
   }
 }
-
