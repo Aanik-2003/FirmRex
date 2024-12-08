@@ -1,111 +1,159 @@
 import 'package:flutter/material.dart';
 
 class DoctorProfile extends StatelessWidget {
-  const DoctorProfile({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.green,
-          unselectedItemColor: Colors.grey,
-          showSelectedLabels: true,
-          items: const[
-            BottomNavigationBarItem(icon: Icon(Icons.home),
-            label: 'Home',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.home),
-              label: 'Discover',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.home),
-              label: 'Explore',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.home),
-              label: 'Manage',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.home),
-              label: 'Profile',
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text("Dr.Nambuvan"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Doctor Image
             Stack(
               children: [
                 Container(
-                  height: 200,
-                  color: Colors.blue,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "https://i.pinimg.com/736x/fb/0e/17/fb0e1739d5b0f708829b7c7e9ad7b847.jpg",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                const Positioned(
-                  left: 20,
-                  right: 20,
-                  bottom: 0,
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(
-                      'https://via.placeholder.com/150', // Replace with actual image URL
+                Container(
+                  height: 300,
+                  color: Colors.black.withOpacity(0.3),
+                ),
+                Positioned(
+                  bottom: 10,
+                  left: 16,
+                  child: Text(
+                    "Dr. Nambuvan",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 80),
+            SizedBox(height: 16),
+
+            // Doctor Details Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Dr. John Doe',
+                  // Doctor Name and Qualification
+                  Text(
+                    "Dr. Nambuvan",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Bachelor of Veterinary Science",
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 8),
+
+                  // Ratings and Reviews
+                  // Row(
+                  //   children: [
+                  //     Icon(Icons.star, color: Colors.amber, size: 20),
+                  //     Icon(Icons.star, color: Colors.amber, size: 20),
+                  //     Icon(Icons.star, color: Colors.amber, size: 20),
+                  //     Icon(Icons.star, color: Colors.amber, size: 20),
+                  //     Icon(Icons.star_half, color: Colors.amber, size: 20),
+                  //     SizedBox(width: 8),
+                  //     Text(
+                  //       "5.0 (100 reviews)",
+                  //       style: TextStyle(color: Colors.grey[600]),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 8),
+
+                  // Availability and Location
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.green, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        "Monday - Friday 8:00 am - 5:00 pm",
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, color: Colors.green, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        "2.5 km",
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+
+                  // Fee
+                  Text(
+                    "Rs.500 for an Appointment",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: Colors.green,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 16),
+
+                  // Doctor Bio
                   Text(
-                    'Cardiologist',
-                    style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                    "Dr. Nambhuvan, one of the most skilled and experienced veterinarians "
+                        "and the owner of the most convenient animal clinic 'Petz & Vetz'. "
+                        "Our paradise is situated in the heart of the town with a pleasant environment. "
+                        "We are ready to treat your beloved doggos & puppers with love and involvement.",
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
-                  const Divider(thickness: 1, height: 40),
-                  const Text(
-                    'Experience',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    '10 years of experience in cardiology, specializing in heart surgeries and patient care.',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const Divider(thickness: 1, height: 40),
-                  const Text(
-                    'Qualifications',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    '- MBBS from XYZ University\n- MD in Cardiology from ABC Institute',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const Divider(thickness: 1, height: 40),
-                  const Text(
-                    'Contact Information',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  const ListTile(
-                    leading: Icon(Icons.phone),
-                    title: Text('+1 234 567 890'),
-                  ),
-                  const ListTile(
-                    leading: Icon(Icons.email),
-                    title: Text('dr.john.doe@example.com'),
-                  ),
-                  const ListTile(
-                    leading: Icon(Icons.location_on),
-                    title: Text('1234 Heart Lane, Health City, TX'),
+                  SizedBox(height: 16),
+
+                  // Book Appointment Button
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      minimumSize: Size(double.infinity, 50),
+                    ),
+                    onPressed: () {
+                      // Book Appointment Logic
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Appointment Booked!")),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.calendar_today),
+                        SizedBox(width: 8),
+                        Text(
+                          "Book Now",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
