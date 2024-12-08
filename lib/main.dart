@@ -1,9 +1,12 @@
+import 'package:firm_rex/views/enterCode.dart';
+import 'package:firm_rex/views/forgotPassword.dart';
 import 'package:firm_rex/views/getstarted1.dart';
 import 'package:firm_rex/views/getstarted2.dart';
 import 'package:firm_rex/views/getstarted3.dart';
 import 'package:firm_rex/views/landingpage.dart';
 import 'package:firm_rex/views/loginpage.dart';
 import 'package:firm_rex/views/map.dart';
+import 'package:firm_rex/views/setNewPassword.dart';
 import 'package:firm_rex/views/signuppage.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: GetStarted1(),
+      home: SetNewPasswordScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
