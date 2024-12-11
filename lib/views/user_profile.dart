@@ -1,21 +1,10 @@
 import 'package:firm_rex/auth/user_auth.dart';
+import 'package:firm_rex/controller/get_user.dart';
+import 'package:firm_rex/model/user_profile_edit.dart';
 import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
-import 'loginpage.dart';
-
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: ProfileScreen(),
-//     );
-//   }
-// }
 
 class UserProfile extends StatefulWidget {
   final int selectedIndex;
@@ -28,9 +17,21 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile>{
   final _auth = UserAuth();
+  final _getUser = GetUser();
+
   int selectedIndex;
 
   _UserProfileState() : selectedIndex = 0;
+
+  // Method to refresh user data
+  void refreshUserProfile() {
+    setState(() {
+      // You can fetch user details again or refresh the data in your UI
+      _getUser.getUserName();
+      _getUser.getUserNumber();
+      _getUser.getUserAddress();
+    });
+  }
 
   @override
   void initState() {
@@ -38,7 +39,6 @@ class _UserProfileState extends State<UserProfile>{
     selectedIndex = widget
         .selectedIndex; // Set the initial selected index from the constructor
   }
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -86,6 +86,7 @@ class _UserProfileState extends State<UserProfile>{
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -128,7 +129,8 @@ class _UserProfileState extends State<UserProfile>{
             height: 100,
           ),
           SafeArea(
-            child: Column(
+            child:
+            Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -138,16 +140,51 @@ class _UserProfileState extends State<UserProfile>{
                       IconButton(
                         icon: const Icon(
                             Icons.arrow_back_ios, color: Colors.white),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: selectedIndex)),
+                          );
+                        },
                       ),
-                      const Text(
-                        "Aaniya Thapa",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+
+                      FutureBuilder<String>(
+                        future: GetUser().getUserName(), // Fetch the user's name
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            // While fetching data
+                            return Text(
+                              "Hello, loading...",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            );
+                          } else if (snapshot.hasError || snapshot.data == null) {
+                            // On error or no data
+                            return Text(
+                              "Hello, User!",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            );
+                          } else {
+                            // On successful retrieval
+                            return Text(
+                              "${snapshot.data}",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
                       ),
+
                       const CircleAvatar(
                         backgroundImage: NetworkImage(
                           'https://i.pinimg.com/736x/06/9b/7b/069b7b62afc2b8f186d5c6823bc63073.jpg', // Replace with actual image URL
@@ -179,21 +216,150 @@ class _UserProfileState extends State<UserProfile>{
                               ),
                             ),
                             const SizedBox(height: 30),
-                            const Text(
-                              'Aaniya Thapa',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            FutureBuilder<String>(
+                              future: GetUser().getUserName(), // Fetch the user's name
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  // While fetching data
+                                  return Text(
+                                    "Hello, loading...",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                } else if (snapshot.hasError || snapshot.data == null) {
+                                  // On error or no data
+                                  return Text(
+                                    "Hello, User!",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                } else {
+                                  // On successful retrieval
+                                  return Text(
+                                    "${snapshot.data}",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                             const SizedBox(height: 5),
-                            Text(
-                              'aaniyathapa@gmail.com',
-                              style: TextStyle(color: Colors.grey[600]),
+                            FutureBuilder<String>(
+                              future: GetUser().getUserEmail(), // Fetch the user's name
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  // While fetching data
+                                  return Text(
+                                    "Email loading...",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                } else if (snapshot.hasError || snapshot.data == null) {
+                                  // On error or no data
+                                  return Text(
+                                    "user@gmail.com",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                } else {
+                                  // On successful retrieval
+                                  return Text(
+                                    "${snapshot.data}",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                            Text(
-                              '0758519048',
-                              style: TextStyle(color: Colors.grey[600]),
+                            FutureBuilder<String>(
+                              future: GetUser().getUserNumber(), // Fetch the user's name
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  // While fetching data
+                                  return Text(
+                                    "Email loading...",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                } else if (snapshot.hasError || snapshot.data == null) {
+                                  // On error or no data
+                                  return Text(
+                                    "user@gmail.com",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                } else {
+                                  // On successful retrieval
+                                  return Text(
+                                    "${snapshot.data}",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                            FutureBuilder<String>(
+                              future: GetUser().getUserAddress(), // Fetch the user's name
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  // While fetching data
+                                  return Text(
+                                    "Email loading...",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                } else if (snapshot.hasError || snapshot.data == null) {
+                                  // On error or no data
+                                  return Text(
+                                    "user@gmail.com",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                } else {
+                                  // On successful retrieval
+                                  return Text(
+                                    "${snapshot.data}",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[600],
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                             const SizedBox(height: 10),
                             TextButton(
@@ -213,14 +379,14 @@ class _UserProfileState extends State<UserProfile>{
                               .green),
                           title: const Text("About me"),
                           trailing: const Icon(Icons.chevron_right),
-                          onTap: () {},
-                        ),
-                        ListTile(
-                          leading: const Icon(
-                              Icons.location_on_outlined, color: Colors.green),
-                          title: const Text("My Address"),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {},
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context)=>EditUserProfile(
+                                  onSave: refreshUserProfile,
+                              ),
+                            );
+                          },
                         ),
                         ListTile(
                           leading: const Icon(Icons.pets, color: Colors.green),

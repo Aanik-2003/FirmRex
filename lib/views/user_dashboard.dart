@@ -2,6 +2,8 @@ import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
 
+import '../controller/get_user.dart';
+
 class DashboardPage extends StatefulWidget {
   final int selectedIndex;
 
@@ -62,811 +64,468 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   @override
-  Widget buildHorizontalScroll(int itemCount){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          itemCount,
-            (index) => Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child:
-            Container(
-              width: 350,
-              height: 180,
-              decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(26.27),
-                ),
-                shadows: [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                    spreadRadius: 0,
-                  )
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+  Widget buildHorizontalScroll(int itemCount) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = constraints.maxWidth;
+        final cardWidth = screenWidth * 1; // Adjust card width to fit within the screen
+        final cardHeight = screenWidth * 0.6; // Adjust card height based on the screen width
+        final padding = screenWidth * 0.02; // Padding as a percentage of screen width
 
-                children: [
-                  Container(
-                    width: 330,
-                    height: 180,
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              itemCount,
+                  (index) => Padding(
+                padding: EdgeInsets.symmetric(horizontal: padding),
+                child: Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(cardHeight * 0.15),
+                    ),
+                    shadows: [
+                      BoxShadow(
+                        color: const Color(0x3F000000),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Container(
+                    width: cardWidth * 0.94, // Adjust inner container width
+                    height: cardHeight,
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
                           width: 1,
                           strokeAlign: BorderSide.strokeAlignOutside,
-                          color: Color(0x33A5A5A5),
+                          color: const Color(0x33A5A5A5),
                         ),
-                        borderRadius: BorderRadius.circular(26.27),
+                        borderRadius: BorderRadius.circular(cardHeight * 0.15),
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(cardWidth * 0.03), // Scaled padding
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Left Section
                           Container(
-                            width: 130,
-                            height: 180,
-                            color: Colors.blue,
+                            width: cardWidth * 0.35,
+                            height: cardHeight,
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: 125,
-                                  height: 110,
+                                  width: cardWidth * 0.33,
+                                  height: cardHeight * 0.6,
                                   decoration: ShapeDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage("https://via.placeholder.com/114x78"),
+                                    image: const DecorationImage(
+                                      image: NetworkImage(
+                                          "https://via.placeholder.com/114x78"),
                                       fit: BoxFit.fill,
                                     ),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 43,),
+                                SizedBox(height: cardHeight * 0.2),
                                 Text(
                                   'Last Visit: 25/11/2022',
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 12,
+                                    fontSize: cardWidth * 0.03,
                                     fontFamily: 'Fredoka',
                                     fontWeight: FontWeight.w400,
-                                    height: 0.12,
+                                    height: 1.2,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          // const SizedBox(width: 5,),
-                          Container(
-                            width: 177,
-                            height: 180,
-                            color: Colors.blueGrey,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: 20, // Adjust top position
-                                  left: 0, // Adjust left position
-                                  child: Text(
-                                    'Dr. Nambuvan',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontFamily: 'Fredoka',
-                                      fontWeight: FontWeight.w500,
-                                      height: 0.07,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 45,
-                                  left: 0,
-                                  child: Text(
-                                    'Bachelor of veterinary science ',
-                                    style: TextStyle(
-                                      color: Color(0xFFA5A5A5),
-                                      fontSize: 12,
-                                      fontFamily: 'Fredoka',
-                                      fontWeight: FontWeight.w400,
-                                      height: 0.11,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 80,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 55,
-                                        height: 16,
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                                        decoration: ShapeDecoration(
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(width: 1.09, color: Colors.redAccent),
-                                            borderRadius: BorderRadius.circular(21.89),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Roudy',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                            fontFamily: 'Fredoka',
-                                            fontWeight: FontWeight.w400,
-                                            height: 0.19,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 13,),
-                                      Icon(
-                                        Icons.location_on,
-                                        color: Colors.red, // Icon color
-                                        size: 16.0, // Icon size
-                                      ),
-                                      const SizedBox(width: 2,),
-                                      Text(
-                                        '2.5 km',
-                                        style: TextStyle(
-                                          color: Color(0xFFA5A5A5),
-                                          fontSize: 11,
-                                          fontFamily: 'Fredoka',
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.12,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 7,),
-                                      Icon(
-                                        Icons.attach_money, // Dollar icon
-                                        color: Colors.green, // Customize color
-                                        size: 16.0, // Customize size
-                                      ),
-                                      Text(
-                                        '100\$',
-                                        style: TextStyle(
-                                          color: Color(0xFFA5A5A5),
-                                          fontSize: 11,
-                                          fontFamily: 'Fredoka',
-                                          fontWeight: FontWeight.w400,
-                                          height: 0.12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 120,
-                                  left: 30, // Adjust this for horizontal positioning
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // Handle button press
-                                      print('Book Appointment button pressed');
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: const Size(80, 10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8), // Rounded corners
-                                        side: BorderSide(
-                                          color: Colors.transparent, // Make the border invisible
-                                          width: 0.0, // Set border width to 0.0
-                                        ),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5), // Button padding
-                                    ),
-                                    child: const Text(
-                                      'Book Appointment  >',
-                                      textAlign: TextAlign.center,
+
+                          // Right Section
+                          Expanded(  // Wrap the right section in Expanded to allow flexibility
+                            child: Container(
+                              height: cardHeight,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: cardHeight * 0.1,
+                                    left: 0,
+                                    child: Text(
+                                      'Dr. Nambuvan',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 12,
+                                        fontSize: cardWidth * 0.05,
                                         fontFamily: 'Fredoka',
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.2, // Adjust height for spacing
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Positioned(
+                                    top: cardHeight * 0.25,
+                                    left: 0,
+                                    child: Text(
+                                      'Bachelor of veterinary science',
+                                      style: TextStyle(
+                                        color: const Color(0xFFA5A5A5),
+                                        fontSize: cardWidth * 0.03,
+                                        fontFamily: 'Fredoka',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: cardHeight * 0.45,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: cardWidth * 0.18,
+                                          height: cardHeight * 0.1,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 13, vertical: 2),
+                                          decoration: ShapeDecoration(
+                                            shape: RoundedRectangleBorder(
+                                              side: const BorderSide(
+                                                  width: 1.09,
+                                                  color: Colors.redAccent),
+                                              borderRadius:
+                                              BorderRadius.circular(21.89),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Roudy',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: cardWidth * 0.03,
+                                              fontFamily: 'Fredoka',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: cardWidth * 0.04),
+                                        const Icon(
+                                          Icons.location_on,
+                                          color: Colors.red,
+                                          size: 16.0,
+                                        ),
+                                        SizedBox(width: cardWidth * 0.01),
+                                        Text(
+                                          '2.5 km',
+                                          style: TextStyle(
+                                            color: const Color(0xFFA5A5A5),
+                                            fontSize: cardWidth * 0.03,
+                                            fontFamily: 'Fredoka',
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        SizedBox(width: cardWidth * 0.04),
+                                        const Icon(
+                                          Icons.attach_money,
+                                          color: Colors.green,
+                                          size: 16.0,
+                                        ),
+                                        Text(
+                                          '100\$',
+                                          style: TextStyle(
+                                            color: const Color(0xFFA5A5A5),
+                                            fontSize: cardWidth * 0.03,
+                                            fontFamily: 'Fredoka',
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    height: 30,
+                                    top: cardHeight * 0.73,
+                                    left: cardWidth * 0.15,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        print('Book Appointment button pressed');
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: cardWidth * 0.04,
+                                            vertical: cardHeight * 0.02),
+                                      ),
+                                      child: Text(
+                                        'Book Appointment >',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: cardWidth * 0.03,
+                                          fontFamily: 'Fredoka',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
+                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-            ),
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size; // Get the screen size
+    double width = size.width;
+    double height = size.height;
+
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(top:16.0),
-            decoration: BoxDecoration(
-              color: Colors.green, // Set background color to green
-              borderRadius: BorderRadius.circular(0), // Optional rounded corners
-            ),
-            child:
+      body: SingleChildScrollView(  // Wrap the content in SingleChildScrollView for scrolling
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Container(
-              height: size.height / 11,
-              width: size.width,
+              padding: EdgeInsets.only(top: size.height * 0.02), // Responsive padding
               decoration: BoxDecoration(
-                color: Colors.green, // Background color for visibility
-                borderRadius: BorderRadius.circular(15),
+                color: Colors.green, // Set background color to green
+                borderRadius: BorderRadius.circular(0), // Optional rounded corners
               ),
-              child: Stack(
-                children: [
-                  // Text at Bottom Left
-                  Positioned(
-                    bottom: 5,
-                    left: 15,
-                    child: Text(
-                      "Hello, Aanik!",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+              child: Container(
+                height: size.height * 0.1, // Responsive height
+                width: width, // Full screen width
+                decoration: BoxDecoration(
+                  color: Colors.green, // Background color for visibility
+                  borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
+                ),
+                child: Stack(
+                  children: [
+                    // Text at Bottom Left
+                    Positioned(
+                      bottom: height * 0.01, // Responsive bottom position
+                      left: width * 0.04, // Responsive left position
+                      child:
+                      FutureBuilder<String>(
+                        future: GetUser().getUserName(), // Fetch the user's name
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            // While fetching data
+                            return Text(
+                              "Hello, loading...",
+                              style: TextStyle(
+                                fontSize: width * 0.045,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            );
+                          } else if (snapshot.hasError || snapshot.data == null) {
+                            // On error or no data
+                            return Text(
+                              "Hello, User!",
+                              style: TextStyle(
+                                fontSize: width * 0.045,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            );
+                          } else {
+                            // On successful retrieval
+                            return Text(
+                              "Hello, ${snapshot.data}!",
+                              style: TextStyle(
+                                fontSize: width * 0.045,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
-                  ),
-                  // Image at Bottom Right
-                  Positioned(
-                    bottom: 5,
-                    right: 10,
-                    child: Container(
-                      height: size.height / 16,
-                      width: size.width / 8,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.grey.shade300, // Optional background color
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15), // Adjust to maintain rounded edges
-                        child: Image.asset(
-                          "images/logo.jpeg",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: size.height/35,),
-          Container(
-            width: size.width,
-            height: size.height / 4,
-            padding: const EdgeInsets.only(
-              top: 25,
-              left: 21.89,
-              right: 18,
-              bottom: 21.89,
-            ),
-            decoration: ShapeDecoration(
-              color: Colors.white.withOpacity(0.4000000059604645),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(26),
-              ),
-              shadows: [
-                BoxShadow(
-                  color: Color(0x26000000),
-                  blurRadius: 43.78,
-                  offset: Offset(0, 5.47),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.only(left: 10, bottom: 8.76),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          child: Text(
-                            'My Pets',
-                            style: TextStyle(
-                              color: Color(0xFF131314),
-                              fontSize: 19.70,
-                              fontFamily: 'Fredoka',
-                              fontWeight: FontWeight.w700,
-                              height: 0.07,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: size.height / 30),
-
-                // Image and button section
-                Container(
-                  width: size.width,
-                  height: size.height / 10,
-                  padding: const EdgeInsets.only(left: 12),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // Logic for first image
-                          print("First pet image tapped!");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PetProfile(selectedIndex: 4,)),
-                          );
-                        },
-                        child: Container(
-                          width: size.width / 5,
-                          height: size.height / 10,
-                          decoration: ShapeDecoration(
-                            color: Color(0xFF7A86AE),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            shadows: [
-                              BoxShadow(
-                                color: Color(0x3F000000),
-                                blurRadius: 4,
-                                offset: Offset(0, 4),
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                left: 0,
-                                top: 0,
-                                child: Container(
-                                  width: size.width / 5,
-                                  height: size.height / 10,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          "https://i.pinimg.com/736x/2d/bb/a9/2dbba9862aef7279188d60b27d5ef458.jpg"),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: size.width / 25),
-                      GestureDetector(
-                        onTap: () {
-                          // Logic for second image
-                          print("Second pet image tapped!");
-                        },
-                        child: Container(
-                          width: size.width / 5,
-                          height: size.height / 10,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: size.width / 5,
-                                height: size.height / 10,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      left: 0,
-                                      top: 0,
-                                      child: Container(
-                                        width: size.width / 5,
-                                        height: size.height / 10,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                                "https://i.pinimg.com/736x/25/21/aa/2521aaed6a2594cae2fa64fc00a3fdb5.jpg"),
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: size.width / 25),
-                      SizedBox(
-                        width: size.width / 12, // Equal width
-                        height: size.width / 12, // Equal height to make it square
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15), // Rounded corners
-                            ),
-                            padding: EdgeInsets.zero, // No padding to fit the image perfectly
-                            backgroundColor: Colors.transparent, // Make the button's background invisible
-                          ),
-                          onPressed: () {
-                            // Button action
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15), // Match the button's corner radius
-                            child: Image.asset(
-                              "images/plus_icon.jpg",
-                              fit: BoxFit.cover,
-                              width: size.width / 13, // Match the button's width
-                              height: size.width / 13, // Match the button's height
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: size.height / 90),
-                Container(
-                  padding: const EdgeInsets.only(top: 8, left: 21),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Sundari',
-                        style: TextStyle(
-                          color: Color(0xFF5E5E62),
-                          fontSize: 15,
-                          fontFamily: 'Fredoka',
-                          fontWeight: FontWeight.w400,
-                          height: 0.09,
-                        ),
-                      ),
-                      SizedBox(width: size.width / 9),
-                      Text(
-                        'Roudy',
-                        style: TextStyle(
-                          color: Color(0xFF5E5E62),
-                          fontSize: 15,
-                          fontFamily: 'Fredoka',
-                          fontWeight: FontWeight.w400,
-                          height: 0.09,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(height: size.height/35,),
-          Container(
-            width: size.width,
-            height: size.height/2.39,
-            padding: const EdgeInsets.only(
-              top: 16,
-              left: 10,
-              right: 10,
-              bottom: 16,
-            ),
-            decoration: ShapeDecoration(
-              color: Colors.red.withOpacity(0.4000000059604645),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(26.27),
-              ),
-              shadows: [
-                BoxShadow(
-                  color: Color(0x26000000),
-                  blurRadius: 43.78,
-                  offset: Offset(0, 5.47),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.only(right: 21.89, bottom: 8.76),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 26,
-                        height: 26,
+                    // Image at Bottom Right
+                    Positioned(
+                      bottom: height * 0.01, // Responsive bottom position
+                      right: width * 0.03, // Responsive right position
+                      child: Container(
+                        height: height * 0.07, // Responsive height
+                        width: width * 0.15, // Responsive width
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage("https://via.placeholder.com/26x26"),
+                          borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
+                          color: Colors.grey.shade300, // Optional background color
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(width * 0.03), // Adjust to maintain rounded edges
+                          child: Image.asset(
+                            "images/logo.jpeg",
                             fit: BoxFit.fill,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8.76),
-                      Expanded(
-                        child: SizedBox(
-                          child: Text(
-                            'Vets',
-                            style: TextStyle(
-                              color: Color(0xFF131314),
-                              fontSize: 19.70,
-                              fontFamily: 'Fredoka',
-                              fontWeight: FontWeight.w700,
-                              height: 0.07,
-                            ),
-                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: height / 35),
+            Container(
+              width: size.width,
+              padding: EdgeInsets.symmetric(
+                vertical: height * 0.025,
+                horizontal: width * 0.06,
+              ),
+              decoration: ShapeDecoration(
+                color: Colors.white.withOpacity(0.4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(width * 0.07),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x26000000),
+                    blurRadius: width * 0.1,
+                    offset: Offset(0, height * 0.005),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'My Pets',
+                        style: TextStyle(
+                          color: Color(0xFF131314),
+                          fontSize: width * 0.05,
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
+                    ),
+                  ),
+                  SizedBox(height: height / 50),
+                  // Image and button section
+                  Row(
+                    children: [
+                      _buildPetImage(width, height, "https://i.pinimg.com/736x/2d/bb/a9/2dbba9862aef7279188d60b27d5ef458.jpg"),
+                      _buildSpacer(width),
+                      _buildPetImage(width, height, "https://i.pinimg.com/736x/25/21/aa/2521aaed6a2594cae2fa64fc00a3fdb5.jpg"),
+                      _buildSpacer(width),
+                      _buildAddButton(width),
                     ],
                   ),
-                ),
-                const SizedBox(height: 15.24),
-                // Container(
-                //   width: 350,
-                //   height: 180,
-                //   decoration: ShapeDecoration(
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(26.27),
-                //     ),
-                //     shadows: [
-                //       BoxShadow(
-                //         color: Color(0x3F000000),
-                //         blurRadius: 10,
-                //         offset: Offset(0, 4),
-                //         spreadRadius: 0,
-                //       )
-                //     ],
-                //   ),
-                //   child: Column(
-                //     mainAxisSize: MainAxisSize.min,
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //
-                //     children: [
-                //       Container(
-                //         width: 330,
-                //         height: 180,
-                //         decoration: ShapeDecoration(
-                //           color: Colors.white,
-                //           shape: RoundedRectangleBorder(
-                //             side: BorderSide(
-                //               width: 1,
-                //               strokeAlign: BorderSide.strokeAlignOutside,
-                //               color: Color(0x33A5A5A5),
-                //             ),
-                //             borderRadius: BorderRadius.circular(26.27),
-                //           ),
-                //         ),
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(10.0),
-                //           child: Row(
-                //             mainAxisSize: MainAxisSize.min,
-                //             mainAxisAlignment: MainAxisAlignment.start,
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               Container(
-                //                 width: 130,
-                //                 height: 180,
-                //                 color: Colors.blue,
-                //                 child: Column(
-                //                   mainAxisSize: MainAxisSize.min,
-                //                   mainAxisAlignment: MainAxisAlignment.start,
-                //                   crossAxisAlignment: CrossAxisAlignment.start,
-                //                   children: [
-                //                     Container(
-                //                       width: 125,
-                //                       height: 110,
-                //                       decoration: ShapeDecoration(
-                //                         image: DecorationImage(
-                //                           image: NetworkImage("https://via.placeholder.com/114x78"),
-                //                           fit: BoxFit.fill,
-                //                         ),
-                //                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                //                       ),
-                //                     ),
-                //                     const SizedBox(height: 43,),
-                //                     Text(
-                //                       'Last Visit: 25/11/2022',
-                //                       textAlign: TextAlign.right,
-                //                       style: TextStyle(
-                //                         color: Colors.black,
-                //                         fontSize: 12,
-                //                         fontFamily: 'Fredoka',
-                //                         fontWeight: FontWeight.w400,
-                //                         height: 0.12,
-                //                       ),
-                //                     ),
-                //                   ],
-                //                 ),
-                //               ),
-                //               // const SizedBox(width: 5,),
-                //               Container(
-                //                 width: 177,
-                //                 height: 180,
-                //                 color: Colors.blueGrey,
-                //                 child: Stack(
-                //                   children: [
-                //                     Positioned(
-                //                       top: 20, // Adjust top position
-                //                       left: 0, // Adjust left position
-                //                       child: Text(
-                //                         'Dr. Nambuvan',
-                //                         style: TextStyle(
-                //                           color: Colors.black,
-                //                           fontSize: 20,
-                //                           fontFamily: 'Fredoka',
-                //                           fontWeight: FontWeight.w500,
-                //                           height: 0.07,
-                //                         ),
-                //                       ),
-                //                     ),
-                //                     Positioned(
-                //                       top: 45,
-                //                       left: 0,
-                //                       child: Text(
-                //                         'Bachelor of veterinary science ',
-                //                         style: TextStyle(
-                //                           color: Color(0xFFA5A5A5),
-                //                           fontSize: 12,
-                //                           fontFamily: 'Fredoka',
-                //                           fontWeight: FontWeight.w400,
-                //                           height: 0.11,
-                //                         ),
-                //                       ),
-                //                     ),
-                //                     Positioned(
-                //                       top: 80,
-                //                       child: Row(
-                //                         children: [
-                //                           Container(
-                //                             width: 55,
-                //                             height: 16,
-                //                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                //                             decoration: ShapeDecoration(
-                //                               shape: RoundedRectangleBorder(
-                //                                 side: BorderSide(width: 1.09, color: Colors.redAccent),
-                //                                 borderRadius: BorderRadius.circular(21.89),
-                //                               ),
-                //                             ),
-                //                             child: Text(
-                //                               'Roudy',
-                //                               style: TextStyle(
-                //                                 color: Colors.white,
-                //                                 fontSize: 10,
-                //                                 fontFamily: 'Fredoka',
-                //                                 fontWeight: FontWeight.w400,
-                //                                 height: 0.19,
-                //                               ),
-                //                             ),
-                //                           ),
-                //                           const SizedBox(width: 13,),
-                //                           Icon(
-                //                             Icons.location_on,
-                //                             color: Colors.red, // Icon color
-                //                             size: 16.0, // Icon size
-                //                           ),
-                //                           const SizedBox(width: 2,),
-                //                           Text(
-                //                             '2.5 km',
-                //                             style: TextStyle(
-                //                               color: Color(0xFFA5A5A5),
-                //                               fontSize: 11,
-                //                               fontFamily: 'Fredoka',
-                //                               fontWeight: FontWeight.w400,
-                //                               height: 0.12,
-                //                             ),
-                //                           ),
-                //                           const SizedBox(width: 7,),
-                //                           Icon(
-                //                             Icons.attach_money, // Dollar icon
-                //                             color: Colors.green, // Customize color
-                //                             size: 16.0, // Customize size
-                //                           ),
-                //                           Text(
-                //                             '100\$',
-                //                             style: TextStyle(
-                //                               color: Color(0xFFA5A5A5),
-                //                               fontSize: 11,
-                //                               fontFamily: 'Fredoka',
-                //                               fontWeight: FontWeight.w400,
-                //                               height: 0.12,
-                //                             ),
-                //                           ),
-                //                         ],
-                //                       ),
-                //                     ),
-                //                     Positioned(
-                //                       top: 120,
-                //                       left: 30, // Adjust this for horizontal positioning
-                //                       child: ElevatedButton(
-                //                         onPressed: () {
-                //                           // Handle button press
-                //                           print('Book Appointment button pressed');
-                //                         },
-                //                         style: ElevatedButton.styleFrom(
-                //                           minimumSize: const Size(80, 10),
-                //                           shape: RoundedRectangleBorder(
-                //                             borderRadius: BorderRadius.circular(8), // Rounded corners
-                //                             side: BorderSide(
-                //                               color: Colors.transparent, // Make the border invisible
-                //                               width: 0.0, // Set border width to 0.0
-                //                             ),
-                //                           ),
-                //                           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5), // Button padding
-                //                         ),
-                //                         child: const Text(
-                //                           'Book Appointment  >',
-                //                           textAlign: TextAlign.center,
-                //                           style: TextStyle(
-                //                             color: Colors.black,
-                //                             fontSize: 12,
-                //                             fontFamily: 'Fredoka',
-                //                             fontWeight: FontWeight.w400,
-                //                             height: 1.2, // Adjust height for spacing
-                //                           ),
-                //                         ),
-                //                       ),
-                //                     ),
-                //                   ],
-                //                 ),
-                //               )
-                //             ],
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                buildHorizontalScroll(5),
-              ],
+                  SizedBox(height: height / 90),
+                  _buildPetNames(width, height),
+                ],
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: height / 20),
+            Container(
+              width: size.width,
+              // Remove fixed height, let the container expand based on content size
+              padding: EdgeInsets.only(
+                top: size.height * 0.02,
+                left: size.width * 0.05,
+                right: size.width * 0.05,
+                bottom: size.height * 0.02,
+              ),
+              decoration: ShapeDecoration(
+                color: Colors.red.withOpacity(0.4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(size.width * 0.07),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x26000000),
+                    blurRadius: size.width * 0.1,
+                    offset: Offset(0, size.height * 0.01),
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: SingleChildScrollView( // Wrap content inside a scroll view
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: size.width,
+                      padding: EdgeInsets.only(right: size.width * 0.06, bottom: size.height * 0.01),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: size.width * 0.065,
+                            height: size.width * 0.065,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage("https://via.placeholder.com/26x26"),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Expanded(
+                            child: SizedBox(
+                              child: Text(
+                                'Vets',
+                                style: TextStyle(
+                                  color: Color(0xFF131314),
+                                  fontSize: size.width * 0.05,
+                                  fontFamily: 'Fredoka',
+                                  fontWeight: FontWeight.w700,
+                                  height: 0.07,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    buildHorizontalScroll(5),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.green,
         selectedItemColor: Colors.green[800],
         unselectedItemColor: Colors.green[200],
-        showSelectedLabels: true, // Show labels for selected items
-        currentIndex: selectedIndex, // Highlight the selected item
-        onTap: _onItemTapped, // Update the state on tap
+        showSelectedLabels: true,
+        currentIndex: selectedIndex,
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -892,7 +551,104 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
-  // Helper method to create the icon and label containers
 
+  // Helper method to build pet images
+  Widget _buildPetImage(double width, double height, String imageUrl) {
+    return GestureDetector(
+      onTap: () {
+        print("Pet image tapped!");
+        // Navigate to PetProfile screen and pass the petId (or other relevant details)
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PetProfile(selectedIndex: 4,), // Pass petId or any other detail (petId: petId)
+          ),
+        );
+      },
+      child: Container(
+        width: width / 5,
+        height: height / 10,
+        decoration: ShapeDecoration(
+          color: Color(0xFF7A86AE),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(width * 0.04),
+          ),
+          shadows: [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: width * 0.02,
+              offset: Offset(0, height * 0.01),
+            ),
+          ],
+        ),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+// Helper method to add spacing between elements
+  Widget _buildSpacer(double width) {
+    return SizedBox(width: width / 25);
+  }
+
+// Helper method to build add button
+  Widget _buildAddButton(double width) {
+    return SizedBox(
+      width: width / 12,
+      height: width / 12,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(width * 0.04),
+          ),
+          padding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
+        ),
+        onPressed: () {},
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(width * 0.04),
+          child: Image.asset(
+            "images/plus_icon.jpg",
+            fit: BoxFit.cover,
+            width: width / 13,
+            height: width / 13,
+          ),
+        ),
+      ),
+    );
+  }
+
+// Helper method to build pet names section
+  Widget _buildPetNames(double width, double height) {
+    return Padding(
+      padding: EdgeInsets.only(left: width * 0.06),
+      child: Row(
+        children: [
+          Text(
+            'Sundari',
+            style: TextStyle(
+              color: Color(0xFF5E5E62),
+              fontSize: width * 0.04,
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(width: width / 9),
+          Text(
+            'Roudy',
+            style: TextStyle(
+              color: Color(0xFF5E5E62),
+              fontSize: width * 0.04,
+              fontFamily: 'Fredoka',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firm_rex/controller/register_user.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
@@ -9,11 +10,21 @@ class UserAuth {
 
   // Sign-Up
   Future<User?> createUserWithEmailAndPassword(
-      String email, String password, BuildContext context) async {
+      email, password, context) async {
     try {
       final cred = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Signup successful"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
       );
       return cred.user;
     } catch (e) {
@@ -26,6 +37,10 @@ class UserAuth {
     return null;
   }
 
+  bool isUser(User? user){
+    return user != null;
+  }
+
   // Sign-In
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
@@ -33,6 +48,12 @@ class UserAuth {
       final cred = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Login successful"),
+          backgroundColor: Colors.green, // Customizing color for success
+        ),
       );
       Navigator.pushReplacement(
         context,
@@ -42,9 +63,11 @@ class UserAuth {
     } catch (e) {
       if (e is FirebaseAuthException) {
         exceptionHandler(e.code, context);
-      } else {
-        exceptionHandler("unknown-error", context);
       }
+      // else {
+      //   exceptionHandler(e.code, context);
+      // }
+      // exceptionHandler("unknown-error", context);
     }
     return null;
   }
@@ -57,6 +80,12 @@ class UserAuth {
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("SignOut successful"),
+          backgroundColor: Colors.green, // Customizing color for success
+        ),
+      );
     } catch (e) {
       exceptionHandler("signout-error", context);
     }
@@ -64,7 +93,7 @@ class UserAuth {
 
   // Exception Handler
   void exceptionHandler(String error, BuildContext context) {
-    String errorMessage = "";
+    String errorMessage = error;
 
     switch (error) {
       case "invalid-email":
@@ -83,7 +112,7 @@ class UserAuth {
         errorMessage = "This email is already in use.";
         break;
       case "weak-password":
-        errorMessage = "The password is too weak.";
+        errorMessage = "Password should be at least 8 characters.";
         break;
       case "operation-not-allowed":
         errorMessage = "This operation is not allowed. Please contact support.";
@@ -91,8 +120,11 @@ class UserAuth {
       case "signout-error":
         errorMessage = "An error occurred while signing out.";
         break;
-      default:
-        errorMessage = "An unknown error occurred. Please try again.";
+      case "invalid-credential":
+        errorMessage = "Invalid credential";
+        break;
+      // default:
+      //   errorMessage = "An unknown error occurred. Please try again.";
     }
 
     // Display error in a dialog box
@@ -113,5 +145,14 @@ class UserAuth {
         );
       },
     );
+  }
+
+  // confirm password
+  bool confirmPassword(String password, String confirmPassword){
+    if(password != confirmPassword){
+      return false;
+    }else{
+      return true;
+    }
   }
 }
