@@ -1,3 +1,4 @@
+import 'package:firm_rex/views/calender.dart';
 import 'package:firm_rex/views/enterCode.dart';
 import 'package:firm_rex/views/forgotPassword.dart';
 import 'package:firm_rex/views/getstarted1.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SetNewPasswordScreen(),
+      home: Calender(),
       debugShowCheckedModeBanner: false,
     );
   }

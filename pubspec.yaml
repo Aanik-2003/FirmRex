@@ -30,8 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  table_calendar: ^3.0.9
 
-  google_maps_flutter:
+  google_maps_flutter: ^2.2.0
+  location: ^5.0.0
   esewa_flutter_sdk:
     path: ./esewa_sdk/esewa_flutter_sdk
 
