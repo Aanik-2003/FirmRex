@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/auth/user_auth.dart';
 import 'package:firm_rex/controller/register_user.dart';
 import 'package:flutter/gestures.dart';
@@ -15,51 +16,14 @@ class Signuppage extends StatefulWidget {
 class SignUpPageState extends State<Signuppage> {
 
   // instantiations
-  final _auth = UserAuth();
-  final _registerUser = RegisterUser();
+  final UserAuth _auth = UserAuth();
+  final RegisterUser _registerUser = RegisterUser();
 
   final _fullnameController = TextEditingController();
   final _user_email = TextEditingController();
   final _user_password = TextEditingController();
   final _confrimpasswordController = TextEditingController();
 
-
-  // method to create new user with user's details
-  // _signUp() async {
-  //   if(_auth.confrimPassword(_user_password.text.trim(), _confrimpasswordController.text.trim())){
-  //     await _auth.createUserWithEmailAndPassword(
-  //       _user_email.text.trim(),
-  //       _user_password.text.trim(),
-  //       context,
-  //     );
-  //     //add user details in firebase
-  //     _registerUser.addUserDetails(_fullnameController.text.trim(), _user_email.text.trim());
-  //
-  //     //show message
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("Signup successful"),
-  //         backgroundColor: Colors.green, // Customizing color for success
-  //       ),
-  //     );
-  //
-  //   }else{
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("Password doesn't match"),
-  //         backgroundColor: Colors.red, // Customizing color for error
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // bool confrimPassword(){
-  //   if(_user_password.text.trim()==_confrimpasswordController.text.trim()){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -149,6 +113,10 @@ class SignUpPageState extends State<Signuppage> {
                                   _confrimpasswordController.text.trim(),
                                 context,
                                 );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => LoginPage()),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
@@ -208,7 +176,19 @@ class SignUpPageState extends State<Signuppage> {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final User? user = await _auth.googleSignUp(context);
+                                if (user != null) {
+                                  // You can handle successful sign-in logic here, if needed
+                                  debugPrint("Google Sign-In successful for user: ${user.email}");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginPage(), // Pass petId or any other detail (petId: petId)
+                                    ),
+                                  );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 shape: RoundedRectangleBorder(
@@ -216,7 +196,7 @@ class SignUpPageState extends State<Signuppage> {
                                 ),
                               ),
                               icon: Icon(Icons.login),
-                              label: const Text("Login With Google"),
+                              label: const Text("Google"),
                             ),
                           ),
                         ),

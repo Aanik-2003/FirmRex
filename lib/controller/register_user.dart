@@ -4,11 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth/user_auth.dart';
 
 class RegisterUser {
-  final _auth = UserAuth();
-  final _firestore = FirebaseFirestore.instance;
+  final UserAuth _auth = UserAuth();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Utility function to show SnackBar
+  void showSnackBar(BuildContext context, String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+      ),
+    );
+  }
 
   /// Adds user details to Firestore
-  Future<void> addUserDetails(String userName, String email) async {
+  Future<void> addUserDetails(String userName, String email, BuildContext context) async {
     try {
       // Get the current user's UID
       final User? user = FirebaseAuth.instance.currentUser;
@@ -25,13 +35,18 @@ class RegisterUser {
           'Phone Number': '',
           'Address': '',
           'Gender': '',
+          'ProfilePic': '',
+        }).catchError((error) {
+          debugPrint('Failed to add user details: $error');
+          showSnackBar(context, 'Failed to save user details. Please try again.', Colors.red);
         });
       } else {
         debugPrint('Error: No user is currently logged in.');
+        showSnackBar(context, 'No user is currently logged in.', Colors.red);
       }
     } catch (e) {
       debugPrint('Error adding user details: $e');
-      rethrow;
+      showSnackBar(context, 'An unexpected error occurred. Please try again.', Colors.red);
     }
   }
 
@@ -44,32 +59,26 @@ class RegisterUser {
       String confirmPassword,
       BuildContext context,
       ) async {
-    if (!_auth.confirmPassword(password, confirmPassword)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Password doesn't match"),
-          backgroundColor: Colors.red,
-        ),
-      );
+    if (!_auth.confirmPasswordMatch(password, confirmPassword)) {
+      showSnackBar(context, "Passwords do not match.", Colors.red);
+      return;
+    }
+
+    if (userName.isEmpty || email.isEmpty || password.isEmpty) {
+      showSnackBar(context, "All fields are required.", Colors.red);
       return;
     }
 
     // Create the user
     User? newUser = await _auth.createUserWithEmailAndPassword(email, password, context);
 
-    if (_auth.isUser(newUser)) {
-      // If user creation was successful, add to Firestore
-      await addUserDetails(userName, email);
 
+    if (_auth.isUserLoggedIn(newUser)) {
+      // If user creation was successful, add details to Firestore
+      await addUserDetails(userName, email, context);
+      showSnackBar(context, "Account created successfully.", Colors.green);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Signup failed"),
-          backgroundColor: Colors.red,
-        ),
-      );
+      showSnackBar(context, "Signup failed. Please try again.", Colors.red);
     }
   }
-
-
 }

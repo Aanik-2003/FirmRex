@@ -34,11 +34,12 @@ class _EditDetailsDialogState extends State<EditUserProfile> {
             .get();
 
         setState(() {
-          nameController.text = userDoc['UserName'] ?? '';
-          ageController.text = userDoc['Age']?.toString() ?? '';
-          numberController.text = userDoc['Phone Number']?.toString() ?? '';
-          addressController.text = userDoc['Address'] ?? '';
-          selectedGender = userDoc['Gender'] ?? '';
+          // Handle empty string or null values and set empty text
+          nameController.text = userDoc['UserName'] == '' ? '' : userDoc['UserName'] ?? '';
+          ageController.text = userDoc['Age'] == '' ? '' : userDoc['Age']?.toString() ?? '';
+          numberController.text = userDoc['Phone Number'] == '' ? '' : userDoc['Phone Number']?.toString() ?? '';
+          addressController.text = userDoc['Address'] == '' ? '' : userDoc['Address'] ?? '';
+          selectedGender = userDoc['Gender'] == '' ? null : userDoc['Gender'];
         });
       }
     } catch (e) {
@@ -87,6 +88,7 @@ class _EditDetailsDialogState extends State<EditUserProfile> {
                 int.parse(numberController.text.trim()),
                 addressController.text.trim(),
                 selectedGender!,
+                context,
               );
 
               widget.onSave();  // Call the callback to refresh the user profile
@@ -129,12 +131,12 @@ class _EditDetailsDialogState extends State<EditUserProfile> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: DropdownButtonFormField<String>(
-        value: selectedGender,
+        value: selectedGender, // Allow null value for gender
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
         ),
-        items: ["Male", "Female"]
+        items: ["Male", "Female", "Other"]
             .map((gender) => DropdownMenuItem<String>(
           value: gender,
           child: Text(gender),
@@ -142,11 +144,12 @@ class _EditDetailsDialogState extends State<EditUserProfile> {
             .toList(),
         onChanged: (value) {
           setState(() {
-            selectedGender = value;
+            selectedGender = value; // Set gender to null if necessary
           });
         },
         validator: (value) {
-          if (value == null || value.isEmpty) {
+          // The gender can be null, so we show a validation error only if gender is not selected
+          if (value == null) {
             return "Please select a gender";
           }
           return null;

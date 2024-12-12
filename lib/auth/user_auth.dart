@@ -1,158 +1,203 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firm_rex/controller/register_user.dart';
-import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
-
-import '../views/loginpage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserAuth {
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Sign-Up
+  // Email Sign-Up
   Future<User?> createUserWithEmailAndPassword(
-      email, password, context) async {
+      String email, String password, BuildContext context) async {
     try {
-      final cred = await _auth.createUserWithEmailAndPassword(
+      final UserCredential cred = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Signup successful"),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
       return cred.user;
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        exceptionHandler(e.code, context);
-      } else {
-        exceptionHandler("unknown-error", context);
-      }
+      _handleAuthException(e, context);
     }
     return null;
   }
 
-  bool isUser(User? user){
+  bool isUserLoggedIn(User? user) {
     return user != null;
   }
 
-  // Sign-In
+  // Email Sign-In
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
-      final cred = await _auth.signInWithEmailAndPassword(
+      final UserCredential cred = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Login successful"),
-          backgroundColor: Colors.green, // Customizing color for success
+          backgroundColor: Colors.green,
         ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: 0)),
       );
       return cred.user;
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        exceptionHandler(e.code, context);
-      }
-      // else {
-      //   exceptionHandler(e.code, context);
-      // }
-      // exceptionHandler("unknown-error", context);
+      _handleAuthException(e, context);
     }
     return null;
+  }
+
+  // Google Sign-Up
+  Future<User?> googleSignUp(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // User canceled the Google sign-in
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in with Firebase using Google credentials
+      final UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
+
+      // Optionally, add Google user details to Firestore directly here, if needed
+      await addGoogleUserDetails(userCredential.user, context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Google sign-in successful"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      return userCredential.user;
+    } catch (e) {
+      debugPrint('Google sign-in error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Google sign-in failed. Please try again."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    return null;
+  }
+
+  /// Adds Google user details to Firestore
+  Future<void> addGoogleUserDetails(User? user, BuildContext context) async {
+    if (user != null) {
+      try {
+        final String uid = user.uid;
+        final String email = user.email ?? "";
+
+        // Check if the user document already exists in Firestore
+        final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+        if (!doc.exists) {
+          // Add Google user details to Firestore if not already added
+          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+            'uid': uid,
+            'UserName': '',
+            'Email': email,
+            'Age': '',
+            'Phone Number': '',
+            'Address': '',
+            'Gender': '',
+            'ProfilePic': '',
+          }).catchError((error) {
+            debugPrint('Failed to add Google user details: $error');
+            showSnackBar(context, 'Failed to save Google user details. Please try again.', Colors.red);
+          });
+        }
+      } catch (e) {
+        debugPrint('Error adding Google user details: $e');
+        showSnackBar(context, 'An unexpected error occurred. Please try again.', Colors.red);
+      }
+    }
   }
 
   // Sign-Out
   Future<void> signOut(BuildContext context) async {
     try {
       await _auth.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      await _googleSignIn.signOut();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("SignOut successful"),
-          backgroundColor: Colors.green, // Customizing color for success
+          content: Text("Sign-out successful"),
+          backgroundColor: Colors.green,
         ),
       );
     } catch (e) {
-      exceptionHandler("signout-error", context);
+      debugPrint('Sign-out error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Failed to sign out. Please try again."),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
-  // Exception Handler
-  void exceptionHandler(String error, BuildContext context) {
-    String errorMessage = error;
+  // Confirm Password
+  bool confirmPasswordMatch(String password, String confirmPassword) {
+    return password == confirmPassword;
+  }
 
-    switch (error) {
-      case "invalid-email":
-        errorMessage = "The email address is not valid.";
-        break;
-      case "user-disabled":
-        errorMessage = "This user account has been disabled.";
-        break;
-      case "user-not-found":
-        errorMessage = "No user found for the provided email.";
-        break;
-      case "wrong-password":
-        errorMessage = "Incorrect password. Please try again.";
-        break;
-      case "email-already-in-use":
-        errorMessage = "This email is already in use.";
-        break;
-      case "weak-password":
-        errorMessage = "Password should be at least 8 characters.";
-        break;
-      case "operation-not-allowed":
-        errorMessage = "This operation is not allowed. Please contact support.";
-        break;
-      case "signout-error":
-        errorMessage = "An error occurred while signing out.";
-        break;
-      case "invalid-credential":
-        errorMessage = "Invalid credential";
-        break;
-      // default:
-      //   errorMessage = "An unknown error occurred. Please try again.";
+  // Handle Authentication Exceptions
+  void _handleAuthException(dynamic e, BuildContext context) {
+    String errorMessage = "An unknown error occurred. Please try again.";
+
+    if (e is FirebaseAuthException) {
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "The email address is not valid.";
+          break;
+        case "user-disabled":
+          errorMessage = "This user account has been disabled.";
+          break;
+        case "user-not-found":
+          errorMessage = "No user found for the provided email.";
+          break;
+        case "wrong-password":
+          errorMessage = "Incorrect password. Please try again.";
+          break;
+        case "email-already-in-use":
+          errorMessage = "This email is already in use.";
+          break;
+        case "weak-password":
+          errorMessage = "Password should be at least 8 characters.";
+          break;
+        case "operation-not-allowed":
+          errorMessage = "This operation is not allowed. Please contact support.";
+          break;
+        default:
+          errorMessage = "Error: ${e.message}";
+      }
     }
 
-    // Display error in a dialog box
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Error"),
-          content: Text(errorMessage),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 
-  // confirm password
-  bool confirmPassword(String password, String confirmPassword){
-    if(password != confirmPassword){
-      return false;
-    }else{
-      return true;
-    }
+  // Display Snack Bar
+  void showSnackBar(BuildContext context, String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+      ),
+    );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/auth/user_auth.dart';
+import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -110,6 +112,12 @@ class LoginPageState extends State<LoginPage> {
                                   _user_password.text.trim(),
                                   context,
                                 );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DashboardPage(selectedIndex: 0), // Pass petId or any other detail (petId: petId)
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
@@ -168,7 +176,19 @@ class LoginPageState extends State<LoginPage> {
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final User? user = await _auth.googleSignUp(context);
+                                if (user != null) {
+                                  // You can handle successful sign-in logic here, if needed
+                                  debugPrint("Google Sign-In successful for user: ${user.email}");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DashboardPage(selectedIndex: 0), // Pass petId or any other detail (petId: petId)
+                                    ),
+                                  );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 shape: RoundedRectangleBorder(
