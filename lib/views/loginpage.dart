@@ -112,12 +112,6 @@ class LoginPageState extends State<LoginPage> {
                                   _user_password.text.trim(),
                                   context,
                                 );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DashboardPage(selectedIndex: 0), // Pass petId or any other detail (petId: petId)
-                                  ),
-                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,

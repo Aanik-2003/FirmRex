@@ -130,7 +130,8 @@ class _EditDetailsDialogState extends State<EditUserProfile> {
   Widget _buildDropdownField(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: DropdownButtonFormField<String>(
+      child:
+      DropdownButtonFormField<String>(
         value: selectedGender, // Allow null value for gender
         decoration: InputDecoration(
           labelText: label,

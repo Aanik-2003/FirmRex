@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../views/user_dashboard.dart';
+
 class UserAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -29,23 +31,45 @@ class UserAuth {
   // Email Sign-In
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
+    // Validate email and password fields
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Email and password cannot be empty."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return null;
+    }
+    // Attempt login if validation passes
     try {
       final UserCredential cred = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Login successful"),
           backgroundColor: Colors.green,
         ),
       );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DashboardPage(selectedIndex: 0), // Pass additional parameters if needed
+        ),
+      );
       return cred.user;
     } catch (e) {
       _handleAuthException(e, context);
+      debugPrint('Error during login: $e');
     }
     return null;
   }
+
 
   // Google Sign-Up
   Future<User?> googleSignUp(BuildContext context) async {
@@ -164,10 +188,9 @@ class UserAuth {
           errorMessage = "This user account has been disabled.";
           break;
         case "user-not-found":
-          errorMessage = "No user found for the provided email.";
-          break;
         case "wrong-password":
-          errorMessage = "Incorrect password. Please try again.";
+        case "invalid-credential":
+          errorMessage = "Invalid credentials. Please check your email and password.";
           break;
         case "email-already-in-use":
           errorMessage = "This email is already in use.";
@@ -190,6 +213,7 @@ class UserAuth {
       ),
     );
   }
+
 
   // Display Snack Bar
   void showSnackBar(BuildContext context, String message, Color backgroundColor) {

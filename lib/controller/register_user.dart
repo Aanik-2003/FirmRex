@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../auth/user_auth.dart';
+import '../views/loginpage.dart';
 
 class RegisterUser {
   final UserAuth _auth = UserAuth();
@@ -77,6 +78,10 @@ class RegisterUser {
       // If user creation was successful, add details to Firestore
       await addUserDetails(userName, email, context);
       showSnackBar(context, "Account created successfully.", Colors.green);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
     } else {
       showSnackBar(context, "Signup failed. Please try again.", Colors.red);
     }

@@ -4,6 +4,7 @@ import 'package:firm_rex/auth/user_auth.dart';
 import 'package:firm_rex/controller/get_user.dart';
 import 'package:firm_rex/model/pet_profile_edit.dart';
 import 'package:firm_rex/model/user_profile_edit.dart';
+import 'package:firm_rex/views/add_pet.dart';
 import 'package:firm_rex/views/loginpage.dart';
 import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
@@ -453,11 +454,10 @@ class _UserProfileState extends State<UserProfile>{
                               leading: const Icon(Icons.pets, color: Colors.green),
                               title: const Text("Add Pet"),
                               trailing: const Icon(Icons.chevron_right),
-                              onTap: () async{
-                                await _auth.signOut(context);
+                              onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => EditPetProfile()),
+                                  MaterialPageRoute(builder: (context) => AddPet()),
                                 );
                               },
                             ),

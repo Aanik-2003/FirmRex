@@ -113,10 +113,6 @@ class SignUpPageState extends State<Signuppage> {
                                   _confrimpasswordController.text.trim(),
                                 context,
                                 );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => LoginPage()),
-                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,

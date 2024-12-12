@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:firm_rex/controller/pet_controller.dart';
+import 'package:firm_rex/views/add_pet.dart';
 import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +20,24 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+
+  final _petController = PetController();
   int selectedIndex = 0; // Current selected index for BottomNavigationBar
 
   _DashboardPageState() : selectedIndex = 0;
+
+  List<Map<String, dynamic>> _pets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshPetList(); // Initial load of pet list
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -391,58 +410,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
             SizedBox(height: height / 35),
-            Container(
-              width: size.width,
-              padding: EdgeInsets.symmetric(
-                vertical: height * 0.025,
-                horizontal: width * 0.06,
-              ),
-              decoration: ShapeDecoration(
-                color: Colors.white.withOpacity(0.4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(width * 0.07),
-                ),
-                shadows: [
-                  BoxShadow(
-                    color: Color(0x26000000),
-                    blurRadius: width * 0.1,
-                    offset: Offset(0, height * 0.005),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'My Pets',
-                        style: TextStyle(
-                          color: Color(0xFF131314),
-                          fontSize: width * 0.05,
-                          fontFamily: 'Fredoka',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: height / 50),
-                  // Image and button section
-                  Row(
-                    children: [
-                      _buildPetImage(width, height, "https://i.pinimg.com/736x/2d/bb/a9/2dbba9862aef7279188d60b27d5ef458.jpg"),
-                      _buildSpacer(width),
-                      _buildPetImage(width, height, "https://i.pinimg.com/736x/25/21/aa/2521aaed6a2594cae2fa64fc00a3fdb5.jpg"),
-                      _buildSpacer(width),
-                      _buildAddButton(width),
-                    ],
-                  ),
-                  SizedBox(height: height / 90),
-                  _buildPetNames(width, height),
-                ],
-              ),
-            ),
+            _buildPetList(),
             SizedBox(height: height / 20),
             Container(
               width: size.width,
@@ -552,103 +520,102 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  // Helper method to build pet images
-  Widget _buildPetImage(double width, double height, String imageUrl) {
-    return GestureDetector(
-      onTap: () {
-        print("Pet image tapped!");
-        // Navigate to PetProfile screen and pass the petId (or other relevant details)
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PetProfile(selectedIndex: 4,), // Pass petId or any other detail (petId: petId)
-          ),
-        );
-      },
-      child: Container(
-        width: width / 5,
-        height: height / 10,
-        decoration: ShapeDecoration(
-          color: Color(0xFF7A86AE),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(width * 0.04),
-          ),
-          shadows: [
-            BoxShadow(
-              color: Color(0x3F000000),
-              blurRadius: width * 0.02,
-              offset: Offset(0, height * 0.01),
-            ),
-          ],
-        ),
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
+  Future<void> _refreshPetList() async {
+    try {
+      final pets = await _petController.getAllPets();
+      setState(() {
+        _pets = pets;
+      });
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error refreshing pet list: $e")),
+      );
+    }
   }
 
-// Helper method to add spacing between elements
-  Widget _buildSpacer(double width) {
-    return SizedBox(width: width / 25);
-  }
-
-// Helper method to build add button
-  Widget _buildAddButton(double width) {
-    return SizedBox(
-      width: width / 12,
-      height: width / 12,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(width * 0.04),
-          ),
-          padding: EdgeInsets.zero,
-          backgroundColor: Colors.transparent,
-        ),
-        onPressed: () {},
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(width * 0.04),
-          child: Image.asset(
-            "images/plus_icon.jpg",
-            fit: BoxFit.cover,
-            width: width / 13,
-            height: width / 13,
-          ),
-        ),
-      ),
-    );
-  }
-
-// Helper method to build pet names section
-  Widget _buildPetNames(double width, double height) {
-    return Padding(
-      padding: EdgeInsets.only(left: width * 0.06),
-      child: Row(
+  Widget _buildPetList() {
+    return RefreshIndicator(
+      onRefresh: _refreshPetList,
+      child: Stack(
         children: [
-          Text(
-            'Sundari',
-            style: TextStyle(
-              color: Color(0xFF5E5E62),
-              fontSize: width * 0.04,
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          SizedBox(width: width / 9),
-          Text(
-            'Roudy',
-            style: TextStyle(
-              color: Color(0xFF5E5E62),
-              fontSize: width * 0.04,
-              fontFamily: 'Fredoka',
-              fontWeight: FontWeight.w400,
-            ),
+          Column(
+            children: [
+              _pets.isEmpty
+                  ? const Center(child: Text("No pets added yet."))
+                  : SingleChildScrollView(
+                scrollDirection: Axis.horizontal, // Allow horizontal scrolling
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Add the pet cards
+                    ..._pets.map((pet) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Card(
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: pet['image']?.startsWith('http') ?? false
+                                    ? NetworkImage(pet['image'])
+                                    : FileImage(File(pet['image'])) as ImageProvider,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(pet['name'] ?? 'Unknown'),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+
+                    // AddButton at the end of the Row
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, top: 20),
+                      child: _buildAddButton(30), // Your AddButton
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+
+// Helper method to build add button
+  Widget _buildAddButton(double width) {
+    return SizedBox(
+      width: width+1,
+      height: width+1,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          padding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddPet(),
+            ),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.asset(
+            "images/plus_icon.jpg",
+            fit: BoxFit.cover,
+            width: width,
+            height: width,
+          ),
+        ),
+      ),
+    );
+  }
+
 }
 
