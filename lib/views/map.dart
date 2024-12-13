@@ -33,6 +33,10 @@ class MapSampleState extends State<MapSample> {
     LatLng(27.7130, 85.3230), // Example pet shop 2
   ];
 
+  TextEditingController _searchController = TextEditingController(); // Controller for the search bar
+
+  int _selectedIndex = 2; // Default index to show the map
+
   @override
   void initState() {
     super.initState();
@@ -137,19 +141,105 @@ class MapSampleState extends State<MapSample> {
     await controller.animateCamera(CameraUpdate.newLatLng(location));
   }
 
+  // Method to switch between different views
+  Widget _getSelectedView() {
+    switch (_selectedIndex) {
+      case 0:
+        return Center(child: Text('Home View'));
+      case 1:
+        return Center(child: Text('Explore View'));
+      case 2:
+        return _buildMapView();
+      case 3:
+        return Center(child: Text('Manage View'));
+      case 4:
+        return Center(child: Text('Profile View'));
+      default:
+        return _buildMapView();
+    }
+  }
+
+  // Google Map view
+  Widget _buildMapView() {
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: _kInitialPosition,
+      markers: _markers,
+      onMapCreated: (GoogleMapController controller) async {
+        _controller.complete(controller);
+        if (_mapTheme != null) {
+          controller.setMapStyle(_mapTheme);
+        }
+      },
+    );
+  }
+
+  // Handle item tap on Bottom Navigation
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: _kInitialPosition,
-        markers: _markers,
-        onMapCreated: (GoogleMapController controller) async {
-          _controller.complete(controller);
-          if (_mapTheme != null) {
-            controller.setMapStyle(_mapTheme);
-          }
-        },
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        actions: [
+          // Search bar in the app bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 1),
+            child: SizedBox(
+              width: 350,
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      // Implement search functionality
+                      print('Search: ${_searchController.text}');
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: _getSelectedView(),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.green,
+        selectedItemColor: Colors.green[800],
+        unselectedItemColor: Colors.green[200],
+        showSelectedLabels: true,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Manage',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _findNearestPetShop,
