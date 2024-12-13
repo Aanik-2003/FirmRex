@@ -1,3 +1,4 @@
+import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/views/medical_records.dart';
 import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
@@ -13,6 +14,7 @@ class PetHealth extends StatefulWidget {
 }
 
 class _PetHealthState extends State<PetHealth> {
+  final _petController = PetController();
   int selectedIndex;
   _PetHealthState() : selectedIndex = 0;
 
@@ -127,10 +129,11 @@ class _PetHealthState extends State<PetHealth> {
                     IconButton(
                       icon: Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PetProfile(selectedIndex: 4)),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => PetProfile(selectedIndex: 4,)),
+                        // );
+                        // _petController.navigateToPetProfile(context,);
                       },
                     ),
                     const SizedBox(width: 8),

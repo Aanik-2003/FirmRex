@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firm_rex/controller/pet_controller.dart';
@@ -38,6 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void dispose() {
     super.dispose();
   }
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -526,6 +528,7 @@ class _DashboardPageState extends State<DashboardPage> {
       setState(() {
         _pets = pets;
       });
+
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -534,23 +537,28 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
+
   Widget _buildPetList() {
     return RefreshIndicator(
       onRefresh: _refreshPetList,
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              _pets.isEmpty
-                  ? const Center(child: Text("No pets added yet."))
-                  : SingleChildScrollView(
-                scrollDirection: Axis.horizontal, // Allow horizontal scrolling
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Add the pet cards
-                    ..._pets.map((pet) {
-                      return Padding(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _pets.isEmpty
+                ? const Center(child: Text("No pets added yet."))
+                : SingleChildScrollView(
+              scrollDirection: Axis.horizontal, // Horizontal scrolling
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Pet cards
+                  ..._pets.map((pet) {
+                    return GestureDetector(
+                      onTap: () {
+                        final petId = pet['id'];
+                        _petController.navigateToPetProfile(context, petId);
+                      },
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Card(
                           child: Column(
@@ -558,30 +566,44 @@ class _DashboardPageState extends State<DashboardPage> {
                               CircleAvatar(
                                 backgroundImage: pet['image']?.startsWith('http') ?? false
                                     ? NetworkImage(pet['image'])
-                                    : FileImage(File(pet['image'])) as ImageProvider,
+                                    : pet['image']?.startsWith('/') ?? false // If it's a base64 string
+                                    ? MemoryImage(base64Decode(pet['image']))
+                                    : AssetImage('assets/profile.png') as ImageProvider,
+
                               ),
                               const SizedBox(height: 8),
                               Text(pet['name'] ?? 'Unknown'),
                             ],
+
                           ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    );
+                  }).toList(),
 
-                    // AddButton at the end of the Row
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, top: 20),
-                      child: _buildAddButton(30), // Your AddButton
-                    ),
-                  ],
-                ),
+                  // AddButton at the end of the Row
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 20),
+                    child: _buildAddButton(30), // Your AddButton
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  // void _navigateToPetDetails(Map<String, dynamic> pet) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => PetProfile(selectedIndex: 4, pet: pet.id,), // Pass the selected pet data
+  //     ),
+  //   );
+  // }
+
 
 // Helper method to build add button
   Widget _buildAddButton(double width) {

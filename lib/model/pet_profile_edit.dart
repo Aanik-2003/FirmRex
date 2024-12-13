@@ -1,14 +1,23 @@
+import 'package:firm_rex/controller/pet_controller.dart';
+import 'package:firm_rex/views/pet_profile.dart';
 import 'package:flutter/material.dart';
 
 
 class EditPetProfile extends StatefulWidget {
+  final String petId;
+
+  EditPetProfile({required this.petId});
+
   @override
   _EditDetailsDialogState createState() => _EditDetailsDialogState();
 }
 
 class _EditDetailsDialogState extends State<EditPetProfile> {
   final _formKey = GlobalKey<FormState>();
+  final _petController = PetController();
+
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController breedController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
@@ -27,6 +36,7 @@ class _EditDetailsDialogState extends State<EditPetProfile> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildTextField("Name", nameController),
+              _buildTextField("Breed", breedController),
               _buildTextField("Age", ageController),
               _buildTextField("Weight", weightController),
               _buildTextField("Height", heightController),
@@ -45,17 +55,36 @@ class _EditDetailsDialogState extends State<EditPetProfile> {
           child: const Text("Cancel"),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate() && selectedGender != null) {
-              // Perform update logic
-              print("Name: ${nameController.text}");
-              print("Age: ${ageController.text}");
-              print("Weight: ${weightController.text}");
-              print("Height: ${heightController.text}");
-              print("Color: ${colorController.text}");
-              print("Gender: $selectedGender");
-              print("Description: ${descriptionController.text}");
-              Navigator.of(context).pop(); // Close dialog
+              // Perform update logic and call updatePet method
+              try {
+                // Assuming you have the pet ID available (you may need to pass it to this screen)
+                String petId = widget.petId; // Replace with the actual pet ID
+
+                await _petController.updatePet(
+                  petId, // Pet ID to update
+                  nameController.text.trim(),
+                  breedController.text.trim(),
+                  selectedGender!, // Gender is not null
+                  int.tryParse(ageController.text.trim()) ?? 0,
+                  colorController.text.trim(),
+                  double.tryParse(heightController.text.trim()) ?? 0.0,
+                  double.tryParse(weightController.text.trim()) ?? 0.0,
+                  descriptionController.text.trim(), // Description from the text field
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Pet details updated successfully!")),
+                );
+                _petController.getPetById(petId);
+                Navigator.of(context).pop(); // Close dialog after updating
+
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Error updating pet: $e")),
+                );
+              }
             } else if (selectedGender == null) {
               // Show error if gender is not selected
               ScaffoldMessenger.of(context).showSnackBar(
@@ -65,6 +94,7 @@ class _EditDetailsDialogState extends State<EditPetProfile> {
           },
           child: const Text("Save"),
         ),
+
       ],
     );
   }

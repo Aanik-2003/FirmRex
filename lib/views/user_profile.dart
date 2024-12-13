@@ -5,7 +5,6 @@ import 'package:firm_rex/controller/get_user.dart';
 import 'package:firm_rex/model/user_profile_edit.dart';
 import 'package:firm_rex/views/add_pet.dart';
 import 'package:firm_rex/views/loginpage.dart';
-import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
@@ -82,12 +81,12 @@ class _UserProfileState extends State<UserProfile>{
         break;
       case 4:
       // Navigate to Profile page (this is already the current page)
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PetProfile(selectedIndex: selectedIndex)),
-        );
-        break;
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => PetProfile(selectedIndex: selectedIndex, )),
+      //   );
+      //   break;
     }
   }
 

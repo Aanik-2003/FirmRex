@@ -1,3 +1,4 @@
+import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/model/pet_profile_edit.dart';
 import 'package:firm_rex/views/pet_health.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
@@ -7,84 +8,86 @@ import 'package:flutter/material.dart';
 
 class PetProfile extends StatefulWidget {
   final int selectedIndex;
+  final Map<String, dynamic> pet;
 
-  const PetProfile({super.key, required this.selectedIndex});
+  const PetProfile({super.key, required this.selectedIndex, required this.pet});
 
   @override
   _PetProfileState createState() => _PetProfileState();
 }
 
 class _PetProfileState extends State<PetProfile> {
-  int selectedIndex;
-
-  _PetProfileState() : selectedIndex = 0;
+  final _petController = PetController();
+  late int selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget
-        .selectedIndex; // Set the initial selected index from the constructor
+    selectedIndex = widget.selectedIndex;
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      selectedIndex = index; // Update selected index on button tap
+      selectedIndex = index;
     });
     switch (index) {
       case 0:
-      // Navigate to Home page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: selectedIndex,)),
-        );
-        break;
-      case 1:
-      // Navigate to Explore page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ExplorePage()),
-      // );
-        break;
-      case 2:
-      // Navigate to Map page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => MapPage()),
-      // );
-        break;
-      case 3:
-      // Navigate to Manage page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ManagePage()),
-      // );
-        break;
-      case 4:
-      // Navigate to Profile page (this is already the current page)
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserProfile(selectedIndex: selectedIndex)),
+            builder: (context) => DashboardPage(selectedIndex: selectedIndex),
+          ),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserProfile(selectedIndex: selectedIndex),
+          ),
         );
         break;
     }
   }
 
+  // Method to refresh user data
+  Future<void> refreshPetProfile(String petId) async {
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      _petController.getPetById(petId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final pet = widget.pet;
+    final petId = pet['id'];
     var size = MediaQuery.of(context).size;
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DashboardPage(selectedIndex: 0),
+              ),
+            );
+          },
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.green,
         selectedItemColor: Colors.green[800],
         unselectedItemColor: Colors.green[200],
         showSelectedLabels: true,
-        // Show labels for selected items
         currentIndex: selectedIndex,
-        // Highlight the selected item
         onTap: _onItemTapped,
-        // Update the state on tap
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -108,185 +111,224 @@ class _PetProfileState extends State<PetProfile> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Stack(
-            children: [
-              Container(
-                height: 280,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      'https://i.pinimg.com/736x/f0/f8/85/f0f885b81b5848e9b9379f3e6e0a2437.jpg', // Replace with actual pet image URL
-                    ),
-                    fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Stack for the avatar and other UI elements
+            Stack(
+              children: [
+                // Wrap the CircleAvatar inside a RefreshIndicator
+                RefreshIndicator(
+                  onRefresh: () => refreshPetProfile(petId),
+                  child: FutureBuilder<Image?>(
+                    future: _petController.retrieveAndDecodeImage(petId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircleAvatar(
+                          radius: 150,
+                          backgroundColor: Colors.grey,
+                          child: CircularProgressIndicator(), // Show a loading indicator
+                        );
+                      } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                        return const CircleAvatar(
+                          radius: 150,
+                          backgroundImage: AssetImage('images/profile.png'), // Fallback image
+                        );
+                      } else {
+                        final Image image = snapshot.data!;
+                        return CircleAvatar(
+                          radius: 150,
+                          backgroundImage: MemoryImage((image.image as MemoryImage).bytes), // Display the local image
+                        );
+                      }
+                    },
                   ),
                 ),
-              ),
-              Positioned(
-                top: 40,
-                left: 16,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: 0,)),
-                    );
+                // Positioned photo icon in the bottom right corner
+                Positioned(
+                  bottom: 10,
+                  right: 30,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 20,
+                    child: IconButton(
+                      icon: const Icon(Icons.photo_camera, color: Colors.green),
+                      onPressed: () => _petController.pickAndStoreImage(petId),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Content below the image and icon
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: RefreshIndicator(
+                onRefresh: () => refreshPetProfile(petId), // Refresh function for the body
+                child: FutureBuilder<Map<String, dynamic>>(
+                  future: _petController.getPetById(petId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (snapshot.hasData) {
+                      final petData = snapshot.data!;
+                      return ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: size.height / 8,
+                            padding: const EdgeInsets.all(22),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(26),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  petData['name'] ?? 'Unknown',
+                                  style: const TextStyle(
+                                    color: Color(0xFF131314),
+                                    fontSize: 26,
+                                    fontFamily: 'Fredoka',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(9),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF576AC),
+                                    borderRadius: BorderRadius.circular(9),
+                                  ),
+                                  child: Icon(
+                                    petData['gender'] == 'Female' ? Icons.female : Icons.male,
+                                    size: 22,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "About Pet",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return EditPetProfile(petId: petId);
+                                    },
+                                  );
+                                },
+                                icon: const Icon(Icons.edit, color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _buildInfoCard('Breed', petData['breed'] ?? 'Unknown'),
+                                SizedBox(width: 10),
+                                _buildInfoCard('Age', petData['age'].toString() ?? 'Unknown'),
+                                SizedBox(width: 10),
+                                _buildInfoCard('Weight', petData['weight'].toString() ?? 'Unknown'),
+                                SizedBox(width: 10),
+                                _buildInfoCard('Height', petData['height'].toString() ?? 'Unknown'),
+                                SizedBox(width: 10),
+                                _buildInfoCard('Color', petData['color'] ?? 'Unknown'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            petData['description'] ?? "This pet does not have a description.",
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Pet's Status",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(26),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.health_and_safety, color: Colors.red, size: 40),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    petData['healthStatus'] ?? 'Health details not available.',
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PetHealth(selectedIndex: 3),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    "View",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Center(child: Text("No pet data available."));
+                    }
                   },
                 ),
               ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ListView(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height / 8,
-                    padding: const EdgeInsets.all(22),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(26),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // User Name Section
-                        Text(
-                          'Bella',
-                          style: TextStyle(
-                            color: Color(0xFF131314),
-                            fontSize: 26,
-                            fontFamily: 'Fredoka',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        // Button Section
-                        Container(
-                          padding: const EdgeInsets.all(9),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF576AC),
-                            borderRadius: BorderRadius.circular(9),
-                          ),
-                          child: Icon(
-                            Icons.female, // Example icon, replace with your asset if needed
-                            size: 22,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // About Bella with Edit Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "About Bella",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // Edit Icon or Edit Text Button
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return EditPetProfile();
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildInfoCard('Age', '1y 4m 11d'),
-                      _buildInfoCard('Weight', '7.5 kg'),
-                      _buildInfoCard('Height', '54 cm'),
-                      _buildInfoCard('Color', 'Black'),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "My first dog which was gifted by my mother for my 20th birthday.",
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Bella's Status",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(26),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.health_and_safety, color: Colors.red, size: 40),
-                        const SizedBox(width: 16),
-                        const Expanded(
-                          child: Text(
-                            'Health: Last medical checkup (2 weeks ago)',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PetHealth(selectedIndex: 3),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            "View",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -321,4 +363,3 @@ class _PetProfileState extends State<PetProfile> {
     );
   }
 }
-

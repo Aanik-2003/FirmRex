@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
 import 'dart:io';
+
+import 'package:provider/provider.dart';
 
 class AddPet extends StatefulWidget {
   @override
@@ -22,7 +24,7 @@ class _AddPetState extends State<AddPet> {
   late TextEditingController color;
   late TextEditingController height;
   late TextEditingController weight;
-  File? _pickedImage;
+  // File? _pickedImage;
 
   @override
   void initState() {
@@ -45,13 +47,14 @@ class _AddPetState extends State<AddPet> {
     height.dispose();
     weight.dispose();
     super.dispose();
+
   }
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) setState(() => _pickedImage = File(image.path));
-  }
+  // Future<void> _pickImage() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) setState(() => _pickedImage = File(image.path));
+  // }
 
   Future<void> _refreshPetList() async {
     try {
@@ -69,32 +72,35 @@ class _AddPetState extends State<AddPet> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: const Text("Add Pets"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: 4)),
+    return ChangeNotifierProvider<PetController>(
+      create: (_) => _petController,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          title: const Text("Add Pets"),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: 4)),
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Added Pets", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              _buildPetList(),
-              const SizedBox(height: 20),
-              const Text("Pet Details", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              _buildForm(),
-            ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Added Pets", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                _buildPetList(),
+                const SizedBox(height: 20),
+                const Text("Pet Details", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                _buildForm(),
+              ],
+            ),
           ),
         ),
       ),
@@ -112,28 +118,56 @@ class _AddPetState extends State<AddPet> {
         itemCount: _pets.length,
         itemBuilder: (context, index) {
           final pet = _pets[index];
-          // Check if imageBytes are available in the pet data
+
+          // Handle image display
+          Widget leadingWidget;
+          if (pet['imageBytes'] != null && pet['imageBytes'] is Uint8List) {
+            // Decoded image from Base64
+            leadingWidget = CircleAvatar(
+              backgroundImage: MemoryImage(pet['imageBytes']),
+            );
+          } else if (pet['image']?.startsWith('http') ?? false) {
+            // Image from URL
+            leadingWidget = CircleAvatar(
+              backgroundImage: NetworkImage(pet['image']),
+            );
+          } else if (pet['image'] != null) {
+            // Image from file path
+            try {
+              leadingWidget = CircleAvatar(
+                backgroundImage: FileImage(File(pet['image'])),
+              );
+            } catch (e) {
+              leadingWidget = const CircleAvatar(
+                child: Icon(Icons.error), // Fallback for invalid file path
+              );
+            }
+          } else {
+            // Fallback when no image is available
+            leadingWidget = const CircleAvatar(
+              child: Icon(Icons.pets),
+            );
+          }
+
           return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: ListTile(
-              leading: pet['imageBytes'] != null
-                  ? CircleAvatar(
-                backgroundImage: MemoryImage(pet['imageBytes']), // Display decoded image
-              )
-                  : (pet['image']?.startsWith('http') ?? false
-                  ? CircleAvatar(
-                backgroundImage: NetworkImage(pet['image']), // For URL
-              )
-                  : CircleAvatar(
-                backgroundImage: FileImage(File(pet['image'])), // For File paths
-              )),
-              title: Text(pet['name'] ?? 'Unknown'),
+              leading: leadingWidget,
+              title: Text(
+                pet['name'] ?? 'Unknown Pet',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                pet['breed'] ?? 'Unknown Breed',
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
             ),
           );
         },
       ),
     );
   }
+
 
   Widget _buildForm() {
     return Form(
@@ -152,7 +186,7 @@ class _AddPetState extends State<AddPet> {
           const SizedBox(height: 16),
           _buildTextField(weight, "Weight in (kg)", "Please enter weight"),
           const SizedBox(height: 20),
-          _buildImagePicker(),
+          _buildImagePicker(context),
           const SizedBox(height: 20),
           _buildAddPetButton(),
         ],
@@ -190,21 +224,30 @@ class _AddPetState extends State<AddPet> {
     );
   }
 
-  Widget _buildImagePicker() {
-    return Column(
-      children: [
-        if (_pickedImage != null)
-          Image.file(_pickedImage!, height: 100, width: 100, fit: BoxFit.cover)
-        else
-          const Text("No image selected"),
-        const SizedBox(height: 10),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-          onPressed: _pickImage,
-          icon: const Icon(Icons.upload_file),
-          label: const Text("Upload Image"),
-        ),
-      ],
+  Widget _buildImagePicker(BuildContext context) {
+    return Consumer<PetController>(
+      builder: (context, petController, _) {
+        return Column(
+          children: [
+            if (petController.pickedImage != null)
+              Image.file(
+                petController.pickedImage!,
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,
+              )
+            else
+              const Text("No image selected"),
+            const SizedBox(height: 10),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              onPressed: petController.pickImage, // Trigger image picker
+              icon: const Icon(Icons.upload_file),
+              label: const Text("Upload Image"),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -215,7 +258,7 @@ class _AddPetState extends State<AddPet> {
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
           try {
-            await _petController.addNewPet(
+            await _petController.addPet(
               petName.text.trim(),
               breedName.text.trim(),
               gender!,
@@ -223,7 +266,6 @@ class _AddPetState extends State<AddPet> {
               color.text.trim(),
               double.tryParse(height.text.trim()) ?? 0.0,
               double.tryParse(weight.text.trim()) ?? 0.0,
-              _pickedImage?.path ?? 'images/profile.png',
               FirebaseAuth.instance.currentUser?.uid ?? '',
             );
             ScaffoldMessenger.of(context)
@@ -237,7 +279,6 @@ class _AddPetState extends State<AddPet> {
               color.clear();
               height.clear();
               weight.clear();
-              _pickedImage = null;
             });
 
             await _refreshPetList();
