@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:firm_rex/auth/user_auth.dart';
 import 'package:firm_rex/controller/get_user.dart';
-import 'package:firm_rex/model/pet_profile_edit.dart';
 import 'package:firm_rex/model/user_profile_edit.dart';
 import 'package:firm_rex/views/add_pet.dart';
 import 'package:firm_rex/views/loginpage.dart';
@@ -38,7 +37,7 @@ class _UserProfileState extends State<UserProfile>{
       _getUser.getUserName();
       _getUser.getUserNumber();
       _getUser.getUserAddress();
-      _getUser.getStoredImagePathFromFirestore();
+      _getUser.retrieveAndDecodeImage();
     });
   }
 
@@ -197,8 +196,8 @@ class _UserProfileState extends State<UserProfile>{
                       //     'https://i.pinimg.com/736x/06/9b/7b/069b7b62afc2b8f186d5c6823bc63073.jpg', // Replace with actual image URL
                       //   ),
                       // ),
-                      FutureBuilder<String?>(
-                        future: _getUser.getStoredImagePathFromFirestore(), // Call the method to fetch the image path
+                      FutureBuilder<Image?>(
+                        future: _getUser.retrieveAndDecodeImage(), // Call the method to fetch the image path
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const CircleAvatar(
@@ -212,10 +211,10 @@ class _UserProfileState extends State<UserProfile>{
                               backgroundImage: AssetImage('images/profile.png'), // Fallback image
                             );
                           } else {
-                            final String imagePath = snapshot.data!;
+                            final Image image = snapshot.data!;
                             return CircleAvatar(
                               radius: 20,
-                              backgroundImage: FileImage(File(imagePath)), // Display the local image
+                              backgroundImage: MemoryImage((image.image as MemoryImage).bytes), // Display the local image
                             );
                           }
                         },
@@ -238,8 +237,8 @@ class _UserProfileState extends State<UserProfile>{
                               children: [
                                 Stack(
                                   children: [
-                                    FutureBuilder<String?>(
-                                      future: _getUser.getStoredImagePathFromFirestore(), // Call the method to fetch the image path
+                                    FutureBuilder<Image?>(
+                                      future: _getUser.retrieveAndDecodeImage(),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState == ConnectionState.waiting) {
                                           return const CircleAvatar(
@@ -253,10 +252,10 @@ class _UserProfileState extends State<UserProfile>{
                                             backgroundImage: AssetImage('images/profile.png'), // Fallback image
                                           );
                                         } else {
-                                          final String imagePath = snapshot.data!;
+                                          final Image image = snapshot.data!;
                                           return CircleAvatar(
                                             radius: 150,
-                                            backgroundImage: FileImage(File(imagePath)), // Display the local image
+                                            backgroundImage: MemoryImage((image.image as MemoryImage).bytes), // Display the local image
                                           );
                                         }
                                       },

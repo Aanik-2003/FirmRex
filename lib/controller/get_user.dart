@@ -1,198 +1,201 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 
 class GetUser {
-
   final ImagePicker _picker = ImagePicker();
 
-  // method to get user's name
+  // Method to get user's name
   Future<String> getUserName() async {
     try {
-      // Get the current logged-in user
       final User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Fetch the user details from Firestore
         final DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
 
-        // Retrieve the full name field
-        final String userName = userDoc['UserName'] ?? 'User';
-        return userName;
+        return userDoc['UserName'] ?? 'User';
       }
-    } catch (e) {
-      print("Error fetching user data: $e");
+    } catch (e, stackTrace) {
+      print("Error fetching user name: $e\nStackTrace: $stackTrace");
     }
     return 'User';
   }
 
-  // method to get user's email
+  // Method to get user's email
   Future<String> getUserEmail() async {
     try {
-      // Get the current logged-in user
       final User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Fetch the user details from Firestore
         final DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
 
-        // Retrieve the full name field
-        final String email = userDoc['Email'] ?? 'User';
-        return email;
+        return userDoc['Email'] ?? 'User';
       }
-    } catch (e) {
-      print("Error fetching user data: $e");
+    } catch (e, stackTrace) {
+      print("Error fetching user email: $e\nStackTrace: $stackTrace");
     }
     return 'User';
   }
 
-  // method to get user's phone number
+  // Method to get user's phone number
   Future<String> getUserNumber() async {
     try {
-      // Get the current logged-in user
       final User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Fetch the user details from Firestore
         final DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
 
-        // Retrieve the user's number
-        final int number = userDoc['Phone Number'] ?? 'Phone';
-        final String userNum = number.toString();
-        return userNum;
+        final int number = userDoc['Phone Number'] ?? 0;
+        return number.toString();
       }
-    } catch (e) {
-      print("Error fetching user data: $e");
+    } catch (e, stackTrace) {
+      print("Error fetching user number: $e\nStackTrace: $stackTrace");
     }
     return '';
   }
 
-  // method to get user's address
+  // Method to get user's address
   Future<String> getUserAddress() async {
     try {
-      // Get the current logged-in user
       final User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Fetch the user details from Firestore
         final DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
 
-        // Retrieve the user's address
-        final String address = userDoc['Address'] ?? 'Address';
-        return address;
+        return userDoc['Address'] ?? 'Address';
       }
-    } catch (e) {
-      print("Error fetching user data: $e");
+    } catch (e, stackTrace) {
+      print("Error fetching user address: $e\nStackTrace: $stackTrace");
     }
     return 'Address';
   }
 
   // Method to update user's details
-  Future<void> updateUserDetails(String userName, int age, int number, String address, String? gender, BuildContext context) async {
+  Future<void> updateUserDetails(
+      String userName, int age, int number, String address, String? gender, BuildContext context) async {
     try {
       final User? user = FirebaseAuth.instance.currentUser;
+
       if (user != null) {
-        // Reference to the user's document in Firestore
         final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
 
-        // Update the user's details
         await userRef.update({
           'UserName': userName,
           'Age': age,
           'Phone Number': number,
           'Address': address,
-          'Gender': gender,
+          if (gender != null) 'Gender': gender,
         });
 
-        // Show success message in Snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text("User details updated successfully"),
             backgroundColor: Colors.green,
           ),
         );
-        print("User details updated successfully");
       } else {
-        // Show error message if no user is logged in
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text("No user is currently logged in."),
             backgroundColor: Colors.red,
           ),
         );
-        print("No user is currently logged in.");
       }
-    } catch (e) {
-      // Show error message in case of an exception
+    } catch (e, stackTrace) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Error updating user data: $e"),
           backgroundColor: Colors.red,
         ),
       );
-      print("Error updating user data: $e");
+      print("Error updating user data: $e\nStackTrace: $stackTrace");
     }
   }
 
-  // Method to pick an image and store the path locally
+  // Method to encode an image to Base64
+  Future<String?> _convertImageToBase64(String imagePath) async {
+    try {
+      final bytes = await File(imagePath).readAsBytes();
+      return base64Encode(bytes);
+    } catch (e, stackTrace) {
+      print("Error converting image to Base64: $e\nStackTrace: $stackTrace");
+      return null;
+    }
+  }
+
+  // Method to pick and store an image
   Future<void> pickAndStoreImage() async {
     try {
       final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
-        // Store the image path locally
-        String imagePath = pickedFile.path;
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('profile_image_path', imagePath);
+        String? base64Image = await _convertImageToBase64(pickedFile.path);
 
-        // Now store the image path in Firestore
-        final User? user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-            'profile_image_path': imagePath,
-          });
+        if (base64Image != null) {
+          final User? user = FirebaseAuth.instance.currentUser;
+
+          if (user != null) {
+            await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+              'profile_image_base64': base64Image,
+            });
+          }
+
+          print('Image saved to Firestore as Base64.');
         }
-        print('Image path saved locally and to Firestore: $imagePath');
-
       }
-    } catch (e) {
-      print("Error picking image: $e");
+    } catch (e, stackTrace) {
+      print("Error picking or storing image: $e\nStackTrace: $stackTrace");
     }
   }
 
-  // Method to get the stored image path from Firestore
+  // Method to get stored image path from Firestore
   Future<String?> getStoredImagePathFromFirestore() async {
     try {
       final User? user = FirebaseAuth.instance.currentUser;
+
       if (user != null) {
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .get();
 
-        return userDoc['profile_image_path'] ?? null; // Get the image path from Firestore
-
+        return userDoc['profile_image_base64'] ?? null;
       }
-    } catch (e) {
-      print("Error fetching image path from Firestore: $e");
+    } catch (e, stackTrace) {
+      print("Error fetching image path from Firestore: $e\nStackTrace: $stackTrace");
     }
     return null;
   }
 
+  // Method to retrieve and decode an image
+  Future<Image?> retrieveAndDecodeImage() async {
+    try {
+      String? base64Image = await getStoredImagePathFromFirestore();
+
+      if (base64Image != null) {
+        Uint8List imageBytes = base64Decode(base64Image.toString());
+        return Image.memory(imageBytes);
+      }
+    } catch (e, stackTrace) {
+      print("Error retrieving or decoding image: $e\nStackTrace: $stackTrace");
+    }
+    return null;
+  }
 }

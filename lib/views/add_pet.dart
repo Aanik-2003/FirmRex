@@ -112,14 +112,21 @@ class _AddPetState extends State<AddPet> {
         itemCount: _pets.length,
         itemBuilder: (context, index) {
           final pet = _pets[index];
+          // Check if imageBytes are available in the pet data
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 8),
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: pet['image']?.startsWith('http') ?? false
-                    ? NetworkImage(pet['image'])
-                    : FileImage(File(pet['image'])) as ImageProvider,
-              ),
+              leading: pet['imageBytes'] != null
+                  ? CircleAvatar(
+                backgroundImage: MemoryImage(pet['imageBytes']), // Display decoded image
+              )
+                  : (pet['image']?.startsWith('http') ?? false
+                  ? CircleAvatar(
+                backgroundImage: NetworkImage(pet['image']), // For URL
+              )
+                  : CircleAvatar(
+                backgroundImage: FileImage(File(pet['image'])), // For File paths
+              )),
               title: Text(pet['name'] ?? 'Unknown'),
             ),
           );
