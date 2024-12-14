@@ -13,16 +13,6 @@ class PetController extends ChangeNotifier {
   File? pickedImage;
   String? _base64Image;
 
-  // Method to encode an image to Base64
-  Future<String?> _convertImageToBase64(String imagePath) async {
-    try {
-      final bytes = await File(imagePath).readAsBytes();
-      return base64Encode(bytes);
-    } catch (e) {
-      print("Error converting image to Base64: $e");
-      return null;
-    }
-  }
 
   // Method to pick image
   Future<void> pickImage() async {
@@ -42,6 +32,16 @@ class PetController extends ChangeNotifier {
     }
   }
 
+  // Method to encode an image to Base64
+  Future<String?> _convertImageToBase64(String imagePath) async {
+    try {
+      final bytes = await File(imagePath).readAsBytes();
+      return base64Encode(bytes);
+    } catch (e) {
+      print("Error converting image to Base64: $e");
+      return null;
+    }
+  }
   // Fetches all pets from Firestore and decodes image if Base64 is provided
   Future<List<Map<String, dynamic>>> getAllPets() async {
     try {
@@ -78,29 +78,11 @@ class PetController extends ChangeNotifier {
   }
 
   // Add a new pet
-  Future<void> addPet(
-      String name,
-      String breed,
-      String gender,
-      int age,
-      String color,
-      double height,
-      double weight,
-      String ownerId,
+  Future<void> addPet(String name,String breed,String gender,int age,String color,double height,double weight,String ownerId,
       ) async {
     if (_base64Image != null) {
       try {
-        await addNewPet(
-          name,
-          breed,
-          gender,
-          age,
-          color,
-          height,
-          weight,
-          _base64Image!,
-          ownerId,
-        );
+        await addNewPet(name,breed,gender,age,color,height,weight,_base64Image!,ownerId,);
         // Clear the picked image after successful addition
         pickedImage = null; // Clear the image
         _base64Image = null; // Optionally clear the base64 string as well
@@ -115,16 +97,7 @@ class PetController extends ChangeNotifier {
   }
 
   // Add a new pet to Firestore
-  Future<void> addNewPet(
-      String name,
-      String breed,
-      String gender,
-      int age,
-      String color,
-      double height,
-      double weight,
-      String base64Image,
-      String ownerId,
+  Future<void> addNewPet(String name,String breed,String gender,int age,String color,double height,double weight,String base64Image,String ownerId,
       ) async {
     try {
       final petData = {
@@ -260,7 +233,7 @@ class PetController extends ChangeNotifier {
     }
   }
 
-  // Method to get stored image path from Firestore
+  // Method to get stored image from Firestore
   Future<String?> getStoredImagePathFromFirestore(String petId) async {
     try {
       DocumentSnapshot petDoc = await FirebaseFirestore.instance

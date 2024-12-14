@@ -1,18 +1,21 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firm_rex/views/loginpage.dart';
-import 'package:firm_rex/views/medical_records.dart';
-import 'package:firm_rex/views/pet_health.dart';
-import 'package:firm_rex/views/pet_profile.dart';
-import 'package:firm_rex/views/signuppage.dart';
-import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:firm_rex/wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() async{
+import 'auth/admin_provider.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AdminProvider(),
+      child: MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

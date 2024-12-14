@@ -1,19 +1,20 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/views/add_pet.dart';
-import 'package:firm_rex/views/pet_profile.dart';
 import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../auth/admin_provider.dart';
 import '../controller/get_user.dart';
 
 class DashboardPage extends StatefulWidget {
   final int selectedIndex;
+  // final bool isAdmin;
 
   // Constructor to accept selectedIndex
-  const DashboardPage({super.key, required this.selectedIndex});
+  const DashboardPage({super.key, required this.selectedIndex,});
 
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -21,6 +22,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+
 
   final _petController = PetController();
   int selectedIndex = 0; // Current selected index for BottomNavigationBar
@@ -40,47 +42,55 @@ class _DashboardPageState extends State<DashboardPage> {
     super.dispose();
   }
 
-
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index; // Update selected index on button tap
-    });
-    switch (index) {
-      case 0:
-      // Navigate to Home page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: selectedIndex,)),
-        );
-        break;
-      case 1:
-      // Navigate to Explore page
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => ExplorePage()),
-      //   );
-        break;
-      case 2:
-      // Navigate to Map page
-      //   Navigator.push(
-      //     context,
-          // MaterialPageRoute(builder: (context) => MapPage()),
-      //   );
-        break;
-      case 3:
-      // Navigate to Manage page
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => ManagePage()),
-      //   );
-        break;
-      case 4:
-      // Navigate to Profile page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: selectedIndex,)),
-        );
-        break;
+  @override
+  void onItemTapped(BuildContext context, int index, bool isAdmin) {
+    print(isAdmin);
+    print(index);
+    // Adjust the profile index based on user role
+    if (isAdmin && index == 3) {
+      // Admin profile (index 3)
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => ManagePage()),
+      // );
+    } else if (isAdmin && index == 4) {
+      // User profile (index 3)
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserProfile(selectedIndex: selectedIndex, onItemTapped: onItemTapped,)),
+      );
+    }
+    else if (!isAdmin && index == 3) {
+      // User profile (index 3)
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserProfile(selectedIndex: index, onItemTapped: onItemTapped,)),
+      );
+    } else {
+      // Handle other navigation cases
+      switch (index) {
+        case 0:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>
+                DashboardPage(selectedIndex: selectedIndex)),
+          );
+          break;
+        case 1:
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => ExplorePage()),
+        // );
+          break;
+        case 2:
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => MapPage()),
+        // );
+          break;
+      }
     }
   }
 
@@ -320,206 +330,215 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size; // Get the screen size
-    double width = size.width;
-    double height = size.height;
+    // Access isAdmin using Provider
+    bool isAdmin = context.watch<AdminProvider>().isAdmin;
 
-    return Scaffold(
-      body: SingleChildScrollView(  // Wrap the content in SingleChildScrollView for scrolling
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: size.height * 0.02), // Responsive padding
-              decoration: BoxDecoration(
-                color: Colors.green, // Set background color to green
-                borderRadius: BorderRadius.circular(0), // Optional rounded corners
-              ),
-              child: Container(
-                height: size.height * 0.1, // Responsive height
-                width: width, // Full screen width
-                decoration: BoxDecoration(
-                  color: Colors.green, // Background color for visibility
-                  borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
-                ),
-                child: Stack(
-                  children: [
-                    // Text at Bottom Left
-                    Positioned(
-                      bottom: height * 0.01, // Responsive bottom position
-                      left: width * 0.04, // Responsive left position
-                      child:
-                      FutureBuilder<String>(
-                        future: GetUser().getUserName(), // Fetch the user's name
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            // While fetching data
-                            return Text(
-                              "Hello, loading...",
-                              style: TextStyle(
-                                fontSize: width * 0.045,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            );
-                          } else if (snapshot.hasError || snapshot.data == null) {
-                            // On error or no data
-                            return Text(
-                              "Hello, User!",
-                              style: TextStyle(
-                                fontSize: width * 0.045,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            );
-                          } else {
-                            // On successful retrieval
-                            return Text(
-                              "Hello, ${snapshot.data}!",
-                              style: TextStyle(
-                                fontSize: width * 0.045,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    // Image at Bottom Right
-                    Positioned(
-                      bottom: height * 0.01, // Responsive bottom position
-                      right: width * 0.03, // Responsive right position
-                      child: Container(
-                        height: height * 0.07, // Responsive height
-                        width: width * 0.15, // Responsive width
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
-                          color: Colors.grey.shade300, // Optional background color
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(width * 0.03), // Adjust to maintain rounded edges
-                          child: Image.asset(
-                            "images/logo.jpeg",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: height / 35),
-            _buildPetList(),
-            SizedBox(height: height / 20),
-            Container(
-              width: size.width,
-              // Remove fixed height, let the container expand based on content size
-              padding: EdgeInsets.only(
-                top: size.height * 0.02,
-                left: size.width * 0.05,
-                right: size.width * 0.05,
-                bottom: size.height * 0.02,
-              ),
-              decoration: ShapeDecoration(
-                color: Colors.red.withOpacity(0.4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(size.width * 0.07),
-                ),
-                shadows: [
-                  BoxShadow(
-                    color: Color(0x26000000),
-                    blurRadius: size.width * 0.1,
-                    offset: Offset(0, size.height * 0.01),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: SingleChildScrollView( // Wrap content inside a scroll view
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: size.width,
-                      padding: EdgeInsets.only(right: size.width * 0.06, bottom: size.height * 0.01),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: size.width * 0.065,
-                            height: size.width * 0.065,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage("https://via.placeholder.com/26x26"),
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: size.width * 0.02),
-                          Expanded(
-                            child: SizedBox(
-                              child: Text(
-                                'Vets',
-                                style: TextStyle(
-                                  color: Color(0xFF131314),
-                                  fontSize: size.width * 0.05,
-                                  fontFamily: 'Fredoka',
-                                  fontWeight: FontWeight.w700,
-                                  height: 0.07,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    buildHorizontalScroll(5),
-                  ],
-                ),
-              ),
-            )
-          ],
+     var size = MediaQuery.of(context).size; // Get the screen size
+      double width = size.width;
+      double height = size.height;
+
+      // Dynamically create BottomNavigationBar items
+      final List<BottomNavigationBarItem> bottomNavItems = [
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.green,
-        selectedItemColor: Colors.green[800],
-        unselectedItemColor: Colors.green[200],
-        showSelectedLabels: true,
-        currentIndex: selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month),
+          label: 'Calendar',
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.map),
+          label: 'Map',
+        ),
+        if (isAdmin)
+          const BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Manage',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ];
+
+      return Scaffold(
+        body: SingleChildScrollView(  // Wrap the content in SingleChildScrollView for scrolling
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: size.height * 0.02), // Responsive padding
+                decoration: BoxDecoration(
+                  color: Colors.green, // Set background color to green
+                  borderRadius: BorderRadius.circular(0), // Optional rounded corners
+                ),
+                child: Container(
+                  height: size.height * 0.1, // Responsive height
+                  width: width, // Full screen width
+                  decoration: BoxDecoration(
+                    color: Colors.green, // Background color for visibility
+                    borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
+                  ),
+                  child: Stack(
+                    children: [
+                      // Text at Bottom Left
+                      Positioned(
+                        bottom: height * 0.01, // Responsive bottom position
+                        left: width * 0.04, // Responsive left position
+                        child:
+                        FutureBuilder<String>(
+                          future: GetUser().getUserName(), // Fetch the user's name
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              // While fetching data
+                              return Text(
+                                "Hello, loading...",
+                                style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              );
+                            } else if (snapshot.hasError || snapshot.data == null) {
+                              // On error or no data
+                              return Text(
+                                "Hello, User!",
+                                style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              );
+                            } else {
+                              // On successful retrieval
+                              return Text(
+                                "Hello, ${snapshot.data}!",
+                                style: TextStyle(
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      // Image at Bottom Right
+                      Positioned(
+                        bottom: height * 0.01, // Responsive bottom position
+                        right: width * 0.03, // Responsive right position
+                        child: Container(
+                          height: height * 0.07, // Responsive height
+                          width: width * 0.15, // Responsive width
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
+                            color: Colors.grey.shade300, // Optional background color
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(width * 0.03), // Adjust to maintain rounded edges
+                            child: Image.asset(
+                              "images/logo.jpeg",
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: height / 35),
+              _buildPetList(),
+              SizedBox(height: height / 20),
+              Container(
+                width: size.width,
+                // Remove fixed height, let the container expand based on content size
+                padding: EdgeInsets.only(
+                  top: size.height * 0.02,
+                  left: size.width * 0.05,
+                  right: size.width * 0.05,
+                  bottom: size.height * 0.02,
+                ),
+                decoration: ShapeDecoration(
+                  color: Colors.red.withOpacity(0.4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(size.width * 0.07),
+                  ),
+                  shadows: [
+                    BoxShadow(
+                      color: Color(0x26000000),
+                      blurRadius: size.width * 0.1,
+                      offset: Offset(0, size.height * 0.01),
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView( // Wrap content inside a scroll view
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: size.width,
+                        padding: EdgeInsets.only(right: size.width * 0.06, bottom: size.height * 0.01),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: size.width * 0.065,
+                              height: size.width * 0.065,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage("https://via.placeholder.com/26x26"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            Expanded(
+                              child: SizedBox(
+                                child: Text(
+                                  'Vets',
+                                  style: TextStyle(
+                                    color: Color(0xFF131314),
+                                    fontSize: size.width * 0.05,
+                                    fontFamily: 'Fredoka',
+                                    fontWeight: FontWeight.w700,
+                                    height: 0.07,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      buildHorizontalScroll(5),
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.green,
+          selectedItemColor: Colors.green[800],
+          unselectedItemColor: Colors.green[200],
+          showSelectedLabels: true,
+          currentIndex: selectedIndex,
+          onTap: (index) {
+            onItemTapped(context, index, isAdmin); // Pass role to handle index
+          },
+          items: bottomNavItems,
+        ),
+      );
   }
 
   Future<void> _refreshPetList() async {
@@ -594,15 +613,6 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
-
-  // void _navigateToPetDetails(Map<String, dynamic> pet) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => PetProfile(selectedIndex: 4, pet: pet.id,), // Pass the selected pet data
-  //     ),
-  //   );
-  // }
 
 
 // Helper method to build add button

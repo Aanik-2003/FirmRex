@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:firm_rex/auth/user_auth.dart';
 import 'package:firm_rex/controller/get_user.dart';
@@ -7,12 +6,16 @@ import 'package:firm_rex/views/add_pet.dart';
 import 'package:firm_rex/views/loginpage.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../auth/admin_provider.dart';
 
 
 class UserProfile extends StatefulWidget {
+  final Function(BuildContext, int, bool) onItemTapped;
   final int selectedIndex;
 
-  const UserProfile({super.key, required this.selectedIndex});
+  const UserProfile({super.key, required this.selectedIndex, required this.onItemTapped});
 
   @override
   _UserProfileState createState() => _UserProfileState();
@@ -22,10 +25,9 @@ class _UserProfileState extends State<UserProfile>{
   final _auth = UserAuth();
   final _getUser = GetUser();
 
-
   int selectedIndex;
 
-  _UserProfileState() : selectedIndex = 0;
+  _UserProfileState() : selectedIndex = 0;  // initial value to 0
 
 
   // Method to refresh user data
@@ -43,56 +45,40 @@ class _UserProfileState extends State<UserProfile>{
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget
-        .selectedIndex; // Set the initial selected index from the constructor
-  }
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index; // Update selected index on button tap
-    });
-    switch (index) {
-      case 0:
-      // Navigate to Home page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: selectedIndex,)),
-        );
-        break;
-      case 1:
-      // Navigate to Explore page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ExplorePage()),
-      // );
-        break;
-      case 2:
-      // Navigate to Map page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => MapPage()),
-      // );
-        break;
-      case 3:
-      // Navigate to Manage page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ManagePage()),
-      // );
-        break;
-      case 4:
-      // Navigate to Profile page (this is already the current page)
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => PetProfile(selectedIndex: selectedIndex, )),
-      //   );
-      //   break;
-    }
+    selectedIndex = widget.selectedIndex;
   }
 
   @override
   Widget build(BuildContext context) {
+    // Access isAdmin using Provider
+    bool isAdmin = context.watch<AdminProvider>().isAdmin;
     var size = MediaQuery.of(context).size;
+
+    // Dynamically create BottomNavigationBar items
+    final List<BottomNavigationBarItem> bottomNavItems = [
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.calendar_month),
+        label: 'Calendar',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.map),
+        label: 'Map',
+      ),
+      if (isAdmin)
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Manage',
+        ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ];
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -100,33 +86,11 @@ class _UserProfileState extends State<UserProfile>{
         selectedItemColor: Colors.green[800],
         unselectedItemColor: Colors.green[200],
         showSelectedLabels: true,
-        // Show labels for selected items
         currentIndex: selectedIndex,
-        // Highlight the selected item
-        onTap: _onItemTapped,
-        // Update the state on tap
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Manage',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+        onTap: (index) {
+          widget.onItemTapped(context, index, isAdmin); // Pass role to handle index
+        },
+        items: bottomNavItems,
       ),
       body: Stack(
         children: [
@@ -358,10 +322,10 @@ class _UserProfileState extends State<UserProfile>{
                                           color: Colors.grey[600],
                                         ),
                                       );
-                                    } else if (snapshot.hasError || snapshot.data == null) {
+                                    } else if (snapshot.hasError || snapshot.data == null || snapshot.data=='') {
                                       // On error or no data
                                       return Text(
-                                        "Phone",
+                                        "",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,

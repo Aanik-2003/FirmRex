@@ -26,29 +26,29 @@ class _PetProfileState extends State<PetProfile> {
     selectedIndex = widget.selectedIndex;
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DashboardPage(selectedIndex: selectedIndex),
-          ),
-        );
-        break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UserProfile(selectedIndex: selectedIndex),
-          ),
-        );
-        break;
-    }
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     selectedIndex = index;
+  //   });
+  //   switch (index) {
+  //     case 0:
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => DashboardPage(selectedIndex: selectedIndex),
+  //         ),
+  //       );
+  //       break;
+  //     case 4:
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => UserProfile(selectedIndex: selectedIndex),
+  //         ),
+  //       );
+  //       break;
+  //   }
+  // }
 
   // Method to refresh user data
   Future<void> refreshPetProfile(String petId) async {
@@ -87,7 +87,7 @@ class _PetProfileState extends State<PetProfile> {
         unselectedItemColor: Colors.green[200],
         showSelectedLabels: true,
         currentIndex: selectedIndex,
-        onTap: _onItemTapped,
+        // onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

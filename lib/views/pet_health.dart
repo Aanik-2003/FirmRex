@@ -64,43 +64,43 @@ class _PetHealthState extends State<PetHealth> {
         .selectedIndex; // Set the initial selected index from the constructor
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index; // Update selected index
-    });
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: 0)),
-        );
-        break;
-      case 1:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 1)),
-        // );
-        break;
-      case 2:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 2)),
-        // );
-        break;
-      case 3:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 3)),
-        // );
-        break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: 4)),
-        );
-        break;
-    }
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     selectedIndex = index; // Update selected index
+  //   });
+  //   switch (index) {
+  //     case 0:
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: 0)),
+  //       );
+  //       break;
+  //     case 1:
+  //       // Navigator.push(
+  //       //   context,
+  //       //   MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 1)),
+  //       // );
+  //       break;
+  //     case 2:
+  //       // Navigator.push(
+  //       //   context,
+  //       //   MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 2)),
+  //       // );
+  //       break;
+  //     case 3:
+  //       // Navigator.push(
+  //       //   context,
+  //       //   MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 3)),
+  //       // );
+  //       break;
+  //     case 4:
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: 4)),
+  //       );
+  //       break;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +235,7 @@ class _PetHealthState extends State<PetHealth> {
         // Show labels for selected items
         currentIndex: selectedIndex,
         // Highlight the selected item
-        onTap: _onItemTapped,
+        // onTap: _onItemTapped,
         // Update the state on tap
         items: const [
           BottomNavigationBarItem(

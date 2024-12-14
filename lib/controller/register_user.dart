@@ -37,6 +37,7 @@ class RegisterUser {
           'Address': '',
           'Gender': '',
           'ProfilePic': '',
+          'role': 'user',
         }).catchError((error) {
           debugPrint('Failed to add user details: $error');
           showSnackBar(context, 'Failed to save user details. Please try again.', Colors.red);

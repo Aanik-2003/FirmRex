@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/controller/pet_controller.dart';
+import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
@@ -8,6 +9,7 @@ import 'dart:io';
 import 'package:provider/provider.dart';
 
 class AddPet extends StatefulWidget {
+
   @override
   _AddPetState createState() => _AddPetState();
 }
@@ -15,6 +17,7 @@ class AddPet extends StatefulWidget {
 class _AddPetState extends State<AddPet> {
   final _formKey = GlobalKey<FormState>();
   final _petController = PetController();
+
 
   List<Map<String, dynamic>> _pets = [];
   late TextEditingController petName;
@@ -50,12 +53,6 @@ class _AddPetState extends State<AddPet> {
 
   }
 
-  // Future<void> _pickImage() async {
-  //   final ImagePicker picker = ImagePicker();
-  //   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-  //   if (image != null) setState(() => _pickedImage = File(image.path));
-  // }
-
   Future<void> _refreshPetList() async {
     try {
       final pets = await _petController.getAllPets();
@@ -80,9 +77,10 @@ class _AddPetState extends State<AddPet> {
           title: const Text("Add Pets"),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.push(
+            onPressed: () =>
+                Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => UserProfile(selectedIndex: 4)),
+              MaterialPageRoute(builder: (context) => DashboardPage(selectedIndex: 0,)),
             ),
           ),
         ),

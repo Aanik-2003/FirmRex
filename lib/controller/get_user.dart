@@ -59,8 +59,7 @@ class GetUser {
             .doc(user.uid)
             .get();
 
-        final int number = userDoc['Phone Number'] ?? 0;
-        return number.toString();
+        return userDoc['Phone Number'] ?? 'Phone Number';
       }
     } catch (e, stackTrace) {
       print("Error fetching user number: $e\nStackTrace: $stackTrace");
@@ -153,7 +152,7 @@ class GetUser {
 
           if (user != null) {
             await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-              'profile_image_base64': base64Image,
+              'ProfilePic': base64Image,
             });
           }
 
@@ -176,7 +175,7 @@ class GetUser {
             .doc(user.uid)
             .get();
 
-        return userDoc['profile_image_base64'] ?? null;
+        return userDoc['ProfilePic'] ?? null;
       }
     } catch (e, stackTrace) {
       print("Error fetching image path from Firestore: $e\nStackTrace: $stackTrace");
@@ -189,10 +188,11 @@ class GetUser {
     try {
       String? base64Image = await getStoredImagePathFromFirestore();
 
-      if (base64Image != null) {
+      if (base64Image != null && base64Image !='') {
         Uint8List imageBytes = base64Decode(base64Image.toString());
         return Image.memory(imageBytes);
       }
+
     } catch (e, stackTrace) {
       print("Error retrieving or decoding image: $e\nStackTrace: $stackTrace");
     }

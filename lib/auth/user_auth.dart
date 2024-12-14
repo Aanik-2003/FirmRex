@@ -2,12 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 import '../views/user_dashboard.dart';
+import 'admin_provider.dart';
 
 class UserAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  late final String role;
+  late final bool isAdmin;
 
   // Email Sign-Up
   Future<User?> createUserWithEmailAndPassword(
@@ -29,6 +34,47 @@ class UserAuth {
   }
 
   // Email Sign-In
+  // Future<User?> loginUserWithEmailAndPassword(
+  //     String email, String password, BuildContext context) async {
+  //   // Validate email and password fields
+  //   if (email.isEmpty || password.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Email and password cannot be empty."),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return null;
+  //   }
+  //   // Attempt login if validation passes
+  //   try {
+  //     final UserCredential cred = await _auth.signInWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Login successful"),
+  //         backgroundColor: Colors.green,
+  //       ),
+  //     );
+  //
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) =>
+  //             DashboardPage(selectedIndex: 0), // Pass additional parameters if needed
+  //       ),
+  //     );
+  //     return cred.user;
+  //   } catch (e) {
+  //     _handleAuthException(e, context);
+  //     debugPrint('Error during login: $e');
+  //   }
+  //   return null;
+  // }
+
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     // Validate email and password fields
@@ -41,34 +87,78 @@ class UserAuth {
       );
       return null;
     }
-    // Attempt login if validation passes
+
     try {
+      // Attempt login
       final UserCredential cred = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Login successful"),
-          backgroundColor: Colors.green,
-        ),
-      );
+      final User? user = cred.user;
+      if (user != null) {
+        // Fetch the user's role from Firestore
+        try {
+          final DocumentSnapshot roleDoc = await FirebaseFirestore.instance
+              .collection('users') // Replace with your Firestore collection
+              .doc(user.uid) // Use the user's UID as the document ID
+              .get();
+          print(roleDoc);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DashboardPage(selectedIndex: 0), // Pass additional parameters if needed
-        ),
-      );
+          if (roleDoc.exists) {
+            role = roleDoc['role']; // Fetch the role field
+            isAdmin = role == 'admin'; // Check if the role is 'admin'
+
+            // Update the AdminProvider with the isAdmin value
+            Provider.of<AdminProvider>(context, listen: false).setAdminStatus(isAdmin);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Login successful as ${isAdmin ? 'Admin' : 'User'}"),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            // Pass isAdmin to the DashboardPage or set it globally
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DashboardPage(
+                  selectedIndex: 0,
+                ),
+              ),
+            );
+
+            return user;
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Role not found for this user."),
+                backgroundColor: Colors.red,
+              ),
+            );
+            await _auth.signOut(); // Sign out if role is missing
+          }
+        } catch (e) {
+          debugPrint("Error fetching user role: $e");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error fetching user role."),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+
       return cred.user;
     } catch (e) {
       _handleAuthException(e, context);
       debugPrint('Error during login: $e');
     }
+
     return null;
   }
+
 
 
   // Google Sign-Up
@@ -136,6 +226,7 @@ class UserAuth {
             'Address': '',
             'Gender': '',
             'ProfilePic': '',
+            'role': 'user',
           }).catchError((error) {
             debugPrint('Failed to add Google user details: $error');
             showSnackBar(context, 'Failed to save Google user details. Please try again.', Colors.red);
