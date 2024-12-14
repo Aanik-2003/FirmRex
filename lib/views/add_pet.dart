@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class AddPet extends StatefulWidget {
+  const AddPet({super.key});
+
   @override
   _AddPetState createState() => _AddPetState();
 }
@@ -53,9 +55,9 @@ class _AddPetState extends State<AddPet> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text("Add Pets"),
+        title: const Text("Add Pets"),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -68,19 +70,19 @@ class _AddPetState extends State<AddPet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Added Pets Section
-              Text(
+              const Text(
                 "Added Pets",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: _pets.length,
                 itemBuilder: (context, index) {
                   final pet = _pets[index];
                   return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundImage: pet['image']!.startsWith('http')
@@ -92,49 +94,49 @@ class _AddPetState extends State<AddPet> {
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Manually Add Pet Section
-              Text(
+              const Text(
                 "Manually Add Pet",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Pet Name",
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) => petName = value,
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Breed Name",
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) => breedName = value,
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: "Gender",
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) => gender = value,
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: "Age",
                               border: OutlineInputBorder(),
                             ),
@@ -143,22 +145,22 @@ class _AddPetState extends State<AddPet> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: "Colour",
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) => color = value,
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: "Height",
                               border: OutlineInputBorder(),
                             ),
@@ -167,15 +169,15 @@ class _AddPetState extends State<AddPet> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Weight",
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) => weight = value,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Image Picker Section
                     Column(
@@ -188,24 +190,24 @@ class _AddPetState extends State<AddPet> {
                             fit: BoxFit.cover,
                           )
                         else
-                          Text("No image selected"),
-                        SizedBox(height: 10),
+                          const Text("No image selected"),
+                        const SizedBox(height: 10),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                           ),
                           onPressed: _pickImage,
-                          icon: Icon(Icons.upload_file),
-                          label: Text("Upload Image"),
+                          icon: const Icon(Icons.upload_file),
+                          label: const Text("Upload Image"),
                         ),
                       ],
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        minimumSize: Size(double.infinity, 50),
+                        minimumSize: const Size(double.infinity, 50),
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -219,11 +221,11 @@ class _AddPetState extends State<AddPet> {
                             _pickedImage = null; // Reset after adding
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Pet added successfully!")),
+                            const SnackBar(content: Text("Pet added successfully!")),
                           );
                         }
                       },
-                      child: Text("Add Pet"),
+                      child: const Text("Add Pet"),
                     ),
                   ],
                 ),

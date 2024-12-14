@@ -1,6 +1,4 @@
-import 'package:firm_rex/views/add_pet.dart';
-import 'package:firm_rex/views/doctor_profile.dart';
-import 'package:firm_rex/views/user_profile.dart';
+import 'package:firm_rex/views/appointmentbooking.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DoctorProfile(),
+      home: const AppointmentPage(),
       // debugShowCheckedModeBanner: false,
     );
   }

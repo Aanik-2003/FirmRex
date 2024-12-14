@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class DoctorProfile extends StatelessWidget {
+  const DoctorProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text("Dr.Nambuvan"),
+        title: const Text("Dr.Nambuvan"),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -23,7 +25,7 @@ class DoctorProfile extends StatelessWidget {
               children: [
                 Container(
                   height: 300,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
                         "https://i.pinimg.com/736x/fb/0e/17/fb0e1739d5b0f708829b7c7e9ad7b847.jpg",
@@ -36,7 +38,7 @@ class DoctorProfile extends StatelessWidget {
                   height: 300,
                   color: Colors.black.withOpacity(0.3),
                 ),
-                Positioned(
+                const Positioned(
                   bottom: 10,
                   left: 16,
                   child: Text(
@@ -50,7 +52,7 @@ class DoctorProfile extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Doctor Details Section
             Padding(
@@ -59,7 +61,7 @@ class DoctorProfile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Doctor Name and Qualification
-                  Text(
+                  const Text(
                     "Dr. Nambuvan",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
@@ -67,7 +69,7 @@ class DoctorProfile extends StatelessWidget {
                     "Bachelor of Veterinary Science",
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
                   // Ratings and Reviews
                   // Row(
@@ -89,29 +91,29 @@ class DoctorProfile extends StatelessWidget {
                   // Availability and Location
                   Row(
                     children: [
-                      Icon(Icons.access_time, color: Colors.green, size: 20),
-                      SizedBox(width: 8),
+                      const Icon(Icons.access_time, color: Colors.green, size: 20),
+                      const SizedBox(width: 8),
                       Text(
                         "Monday - Friday 8:00 am - 5:00 pm",
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.location_on, color: Colors.green, size: 20),
-                      SizedBox(width: 8),
+                      const Icon(Icons.location_on, color: Colors.green, size: 20),
+                      const SizedBox(width: 8),
                       Text(
                         "2.5 km",
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Fee
-                  Text(
+                  const Text(
                     "Rs.500 for an Appointment",
                     style: TextStyle(
                       fontSize: 18,
@@ -119,7 +121,7 @@ class DoctorProfile extends StatelessWidget {
                       color: Colors.green,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Doctor Bio
                   Text(
@@ -129,21 +131,21 @@ class DoctorProfile extends StatelessWidget {
                         "We are ready to treat your beloved doggos & puppers with love and involvement.",
                     style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Book Appointment Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                     onPressed: () {
                       // Book Appointment Logic
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Appointment Booked!")),
+                        const SnackBar(content: Text("Appointment Booked!")),
                       );
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.calendar_today),
