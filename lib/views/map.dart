@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import for launching URLs
 
 class MapSample extends StatefulWidget {
   const MapSample({super.key});
@@ -27,10 +27,13 @@ class MapSampleState extends State<MapSample> {
 
   String? _mapTheme; // Variable to store custom map theme
 
-  // Sample pet shop locations (replace these with real data if needed)
+  // More pet shop locations (replace these with real data if needed)
   List<LatLng> _petShopLocations = [
-    LatLng(27.7095, 85.3208), // Example pet shop 1
-    LatLng(27.7130, 85.3230), // Example pet shop 2
+    LatLng(27.7095, 85.3208), // Pet shop 1
+    LatLng(27.7130, 85.3230), // Pet shop 2
+    LatLng(28.7120, 85.3150), // Pet shop 3
+    LatLng(29.7100, 85.3160), // Pet shop 4
+    LatLng(27.7140, 82.3190), // Pet shop 5
   ];
 
   TextEditingController _searchController = TextEditingController(); // Controller for the search bar
@@ -82,6 +85,27 @@ class MapSampleState extends State<MapSample> {
     });
 
     _goToLocation(_userLocation!);
+    _addPetShopMarkers();
+  }
+
+  // Add all pet shops as markers on the map
+  void _addPetShopMarkers() {
+    for (LatLng petShop in _petShopLocations) {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(petShop.toString()), // Unique ID for each pet shop
+          position: petShop,
+          infoWindow: InfoWindow(
+            title: 'Pet Shop',
+            snippet: 'Click to get directions', // Option to get directions
+            onTap: () => _getDirections(petShop), // Show directions when tapped
+          ),
+        ),
+      );
+    }
+
+    // After adding all pet shops, find the nearest one
+    _findNearestPetShop();
   }
 
   // Find the nearest pet shop to the user
@@ -90,6 +114,7 @@ class MapSampleState extends State<MapSample> {
 
     double shortestDistance = double.infinity;
     LatLng nearestPetShop = _petShopLocations[0];
+    Marker? nearestPetShopMarker;
 
     for (LatLng petShop in _petShopLocations) {
       double distance = _calculateDistance(_userLocation!, petShop);
@@ -102,13 +127,13 @@ class MapSampleState extends State<MapSample> {
     // Remove any previous nearest pet shop marker
     setState(() {
       _markers.removeWhere((m) => m.markerId.value == 'nearest_pet_shop');
-      _markers.add(
-        Marker(
-          markerId: const MarkerId('nearest_pet_shop'),
-          position: nearestPetShop,
-          infoWindow: const InfoWindow(title: 'Nearest Pet Shop'),
-        ),
+      nearestPetShopMarker = Marker(
+        markerId: const MarkerId('nearest_pet_shop'),
+        position: nearestPetShop,
+        infoWindow: const InfoWindow(title: 'Nearest Pet Shop', snippet: 'Click to get directions'),
+        onTap: () => _getDirections(nearestPetShop), // Set onTap to get directions
       );
+      _markers.add(nearestPetShopMarker!);
     });
 
     // Move camera to the nearest pet shop
@@ -139,6 +164,20 @@ class MapSampleState extends State<MapSample> {
   Future<void> _goToLocation(LatLng location) async {
     final GoogleMapController controller = await _controller.future;
     await controller.animateCamera(CameraUpdate.newLatLng(location));
+  }
+
+  // Method to launch Google Maps with directions
+  Future<void> _getDirections(LatLng destination) async {
+    if (_userLocation == null) return;
+
+    final String googleMapsUrl =
+        'https://www.google.com/maps/dir/?api=1&origin=${_userLocation!.latitude},${_userLocation!.longitude}&destination=${destination.latitude},${destination.longitude}&travelmode=driving';
+
+    if (await canLaunch(googleMapsUrl)) {
+      await launch(googleMapsUrl);
+    } else {
+      throw 'Could not open the directions in Google Maps';
+    }
   }
 
   // Method to switch between different views
@@ -242,7 +281,10 @@ class MapSampleState extends State<MapSample> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _findNearestPetShop,
+        onPressed: () {
+          // Find nearest pet shop
+          _findNearestPetShop();
+        },
         label: const Text('Find Nearest Pet Shop'),
         icon: const Icon(Icons.pets),
       ),
