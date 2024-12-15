@@ -34,46 +34,6 @@ class UserAuth {
   }
 
   // Email Sign-In
-  // Future<User?> loginUserWithEmailAndPassword(
-  //     String email, String password, BuildContext context) async {
-  //   // Validate email and password fields
-  //   if (email.isEmpty || password.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("Email and password cannot be empty."),
-  //         backgroundColor: Colors.red,
-  //       ),
-  //     );
-  //     return null;
-  //   }
-  //   // Attempt login if validation passes
-  //   try {
-  //     final UserCredential cred = await _auth.signInWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("Login successful"),
-  //         backgroundColor: Colors.green,
-  //       ),
-  //     );
-  //
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) =>
-  //             DashboardPage(selectedIndex: 0), // Pass additional parameters if needed
-  //       ),
-  //     );
-  //     return cred.user;
-  //   } catch (e) {
-  //     _handleAuthException(e, context);
-  //     debugPrint('Error during login: $e');
-  //   }
-  //   return null;
-  // }
 
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
@@ -109,6 +69,8 @@ class UserAuth {
             role = roleDoc['role']; // Fetch the role field
             isAdmin = role == 'admin'; // Check if the role is 'admin'
 
+            print(role);
+            print(isAdmin);
             // Update the AdminProvider with the isAdmin value
             Provider.of<AdminProvider>(context, listen: false).setAdminStatus(isAdmin);
 

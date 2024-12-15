@@ -49,7 +49,7 @@ class GetUser {
   }
 
   // Method to get user's phone number
-  Future<String> getUserNumber() async {
+  Future<int> getUserNumber() async {
     try {
       final User? user = FirebaseAuth.instance.currentUser;
 
@@ -64,7 +64,7 @@ class GetUser {
     } catch (e, stackTrace) {
       print("Error fetching user number: $e\nStackTrace: $stackTrace");
     }
-    return '';
+    return 0;
   }
 
   // Method to get user's address

@@ -309,7 +309,7 @@ class _UserProfileState extends State<UserProfile>{
                                     }
                                   },
                                 ),
-                                FutureBuilder<String>(
+                                FutureBuilder<int>(
                                   future: GetUser().getUserNumber(), // Fetch the user's name
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
-import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:io';
@@ -27,7 +26,6 @@ class _AddPetState extends State<AddPet> {
   late TextEditingController color;
   late TextEditingController height;
   late TextEditingController weight;
-  // File? _pickedImage;
 
   @override
   void initState() {
@@ -178,7 +176,7 @@ class _AddPetState extends State<AddPet> {
           const SizedBox(height: 16),
           _buildDropdownField("Gender"),
           const SizedBox(height: 16),
-          _buildTextField(age, "Age", "Please enter age"),
+          _buildTextField(age, "Age in (Years)", "Please enter age"),
           const SizedBox(height: 16),
           _buildColorAndHeightFields(),
           const SizedBox(height: 16),

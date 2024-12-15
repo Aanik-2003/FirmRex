@@ -1,430 +1,394 @@
+import 'package:firm_rex/model/medical_records_edit.dart';
 import 'package:firm_rex/views/pet_health.dart';
-import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/material.dart';
+import '../controller/medical_records_controller.dart';
 
-class MedicalRecords extends StatelessWidget {
-  Widget buildHorizontalScroll(int itemCount){
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          itemCount,
-              (index) => Padding(padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child:
-            Container(
-              width: 180,
-              height: 120,
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    width: 1,
-                    color: Colors.black.withOpacity(0.3),
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                shadows: [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 4),
-                    spreadRadius: 0,
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  Widget buildVerticalScroll(int itemCount){
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: List.generate(
-          itemCount,
-              (index) => Padding(padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child:
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Allergies',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Fredoka',
-                      fontWeight: FontWeight.w600,
-                      height: 0,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  buildHorizontalScroll(5),
-                  const SizedBox(height: 10,),
-                  Text(
-                    'Cough',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Fredoka',
-                      fontWeight: FontWeight.w600,
-                      height: 0,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  buildHorizontalScroll(5),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+class MedicalRecords extends StatefulWidget {
 
-  const MedicalRecords({Key? key}) : super(key: key);
+  const MedicalRecords({super.key,});
+  @override
+  _MedicalRecordsState createState() => _MedicalRecordsState();
+}
 
-  // Popup form method
-  void _showPopupForm(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    String? name;
-    String? age;
+class _MedicalRecordsState extends State<MedicalRecords>{
+  final _editMedicalRecords = EditMedicalRecords();
+  final _medicalController = MedicalRecordsController();
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Medical Record'),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a name';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => name = value,
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Age'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter age';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => age = value,
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), // Close dialog
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState?.validate() ?? false) {
-                  _formKey.currentState?.save();
-                  // Process form data here (e.g., save to database or list)
-                  Navigator.of(context).pop(); // Close dialog
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
+  Future<void> _refreshData() async {
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+
+      _medicalController.fetchAllVaccines();
+      _medicalController.fetchAllTreatments();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-          Container(
-            width: double.infinity, // Full width of the screen
-            height: 110,
-            padding: const EdgeInsets.only(top: 30.0),
-            decoration: BoxDecoration(
-              color: Colors.green, // Set the container color to green
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(0),
-                bottomRight: Radius.circular(0),
+          _buildHeader(context), // Fixed header
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refreshData, // Define a method to handle refresh logic
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const SizedBox(height: 20),
+                  _buildCard(
+                    context,
+                    title: "Past Vaccinations",
+                    onAddPressed: () => _editMedicalRecords.addPastVaccineForm(context),
+                    child: FutureBuilder<List<Map<String, dynamic>>>(
+                      future: _medicalController.fetchAllVaccines(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text("Error: ${snapshot.error}"));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text("No Vaccines Found"));
+                        } else {
+                          List<Map<String, dynamic>> vaccines = snapshot.data!;
+                          return _buildHorizontalScrollVaccine(context, vaccines);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildCard(
+                    context,
+                    title: "Past Treatments",
+                    onAddPressed: () => _editMedicalRecords.addPastTreatmentForm(context),
+                    child: FutureBuilder<List<Map<String, dynamic>>>(
+                      future: _medicalController.fetchAllTreatments(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text("Error: ${snapshot.error}"));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text("No Treatment Found"));
+                        } else {
+                          List<Map<String, dynamic>> treatments = snapshot.data!;
+                          return _buildHorizontalScrollTreatment(context, treatments);
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            child:
-            Column(
-              children: [
-                Container(
-                  // padding: const EdgeInsets.symmetric(vertical: 0.0),
-                  child:
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pop(context); // Navigate back
-                        },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Fixed Header Widget
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 110,
+      padding: const EdgeInsets.only(top: 30.0),
+      decoration: const BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(0)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const Text(
+                "Pet Health",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PetHealth()),
+                  );
+                },
+                child: const Text(
+                  "Wellness",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const Text(
+                "Medical Records",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.white,
+                  decorationThickness: 4,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Reusable Card Widget
+  Widget _buildCard(
+      BuildContext context, {
+        required String title,
+        required VoidCallback onAddPressed,
+        required Widget child,
+      }) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.black.withOpacity(0.3),
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Row(
+                children: [
+                  const Text(
+                    "New",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.blue,
+                      decorationThickness: 3,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: onAddPressed,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        "Pet Health",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.add,
+                          size: 32,
+                          color: Colors.blue,
                         ),
                       ),
-                    ],
+                    ),
                   ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
+          child,
+        ],
+      ),
+    );
+  }
 
+  // Horizontal Scroll Implementation for displaying vaccines
+  Widget _buildHorizontalScrollVaccine(BuildContext context, List<Map<String, dynamic>> vaccines) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: vaccines.map((vaccine) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: GestureDetector(
+              onTap: () {
+                // Show the details dialog when a container is clicked
+                _editMedicalRecords.showVaccineDetailsPopup(context, vaccine);
+              },
+              child: Container(
+                width: 180,
+                height: 150,  // Increased height to accommodate more text
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 1,
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  shadows: const [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 50,),
-                  child:
-                  Row(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 16),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PetHealth(selectedIndex: 4,)),
-                          );
-                        },
-                        child: const Text(
-                          "Wellness",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 80),
-                      const Text(
-                        "Medical Records",
-                        style: TextStyle(
-                          fontSize: 20,
+                      // Vaccine Name
+                      Text(
+                        vaccine['vaccineName'] ?? 'Unknown Vaccine',
+                        style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white,
-                          decorationThickness: 4,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-          ),
-          const SizedBox(height: 20,),
-          Container(
-            width: 408,
-            height: 230,
-            padding: const EdgeInsets.only(top: 10),
-            decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 1,
-                  color: Colors.black.withOpacity(0.30000001192092896),
-                ),
-              ),
-              shadows: [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: Row(
-                    children: [
+                      const SizedBox(height: 10),
+                      // Date Given
                       Text(
-                        '  Past vaccinations',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontFamily: 'Fredoka',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                        ),
-                      ),
-                      const SizedBox(width: 80,),
-                      Text(
-                        'New',
-                        style: TextStyle(
-                          color: Colors.blue,
+                        '${vaccine['dateGiven'].day}/${vaccine['dateGiven'].month}/${vaccine['dateGiven'].year}',
+                        style: const TextStyle(
                           fontSize: 14,
-                          fontFamily: 'Fredoka',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.blue,
-                          decorationThickness: 3,
+                          color: Colors.black54,
                         ),
-
                       ),
-                      const SizedBox(width: 10,),
-                      GestureDetector(
-                        onTap: () {
-                          print("Widget clicked!");
-                          _showPopupForm(context);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Background color of the container (optional)
-                            shape: BoxShape.circle, // Makes it circular
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2), // Shadow color
-                                blurRadius: 6, // Softness of the shadow
-                                offset: Offset(0, 3), // Shadow position: x (horizontal), y (vertical)
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0), // Optional padding for better sizing
-                            child: Icon(
-                              Icons.add, // The clickable icon
-                              size: 32,
-                              color: Colors.blue,
-                            ),
-                          ),
+                      const SizedBox(height: 10),
+                      // Doctor Name
+                      Text(
+                        'Doctor: ${vaccine['doctorName'] ?? 'Unknown'}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 20,),
-                Container(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Column(
-                    children: [
-                      buildHorizontalScroll(5),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-          ),
-          const SizedBox(height: 20,),
-          Container(
-            width: 408,
-            height: 410,
-            padding: const EdgeInsets.only(top: 10, left: 10),
-            decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 1,
-                  color: Colors.black.withOpacity(0.30000001192092896),
                 ),
               ),
-              shadows: [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                )
-              ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: Row(
-                    children: [
-                      Text(
-                        'Past Treatements',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontFamily: 'Fredoka',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                        ),
-                      ),
-                      const SizedBox(width: 80,),
-                      Text(
-                        'New',
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 14,
-                            fontFamily: 'Fredoka',
-                            fontWeight: FontWeight.w600,
-                            height: 0,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.blue,
-                            decorationThickness: 3,
-                        ),
+          );
+        }).toList(),
+      ),
+    );
+  }
 
-                      ),
-                      const SizedBox(width: 10,),
-                      GestureDetector(
-                        onTap: () {
-                          print("Widget clicked!");
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white, // Background color of the container (optional)
-                            shape: BoxShape.circle, // Makes it circular
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2), // Shadow color
-                                blurRadius: 6, // Softness of the shadow
-                                offset: Offset(0, 3), // Shadow position: x (horizontal), y (vertical)
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0), // Optional padding for better sizing
-                            child: Icon(
-                              Icons.add, // The clickable icon
-                              size: 32,
-                              color: Colors.blue,
-                            ),
-                          ),
+
+  Widget _buildHorizontalScrollTreatment(BuildContext context, List<Map<String, dynamic>> treatments) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: treatments.map((treatment) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: GestureDetector(
+              onTap: () {
+                // Show the details dialog when a container is clicked
+                _editMedicalRecords.showVaccineDetailsPopup(context, treatment);
+              },
+              child: Container(
+                width: 180,
+                height: 150,  // Increased height to accommodate more text
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 1,
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  shadows: const [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Vaccine Name
+                      Text(
+                        treatment['treatmentName'] ?? 'Unknown Treatment',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
+                      // Date Given
+                      Text(
+                        '${treatment['dateGiven'].day}/${treatment['dateGiven'].month}/${treatment['dateGiven'].year}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      // Doctor Name
+                      Text(
+                        'Doctor: ${treatment['doctorName'] ?? 'Unknown'}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  height: 350,
-                    child: buildVerticalScroll(5)
-                ),
-              ],
+              ),
             ),
-          ),
-
-        ],
+          );
+        }).toList(),
       ),
     );
   }

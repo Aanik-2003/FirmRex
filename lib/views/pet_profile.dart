@@ -2,7 +2,6 @@ import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/model/pet_profile_edit.dart';
 import 'package:firm_rex/views/pet_health.dart';
 import 'package:firm_rex/views/user_dashboard.dart';
-import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
 
 
@@ -26,31 +25,6 @@ class _PetProfileState extends State<PetProfile> {
     selectedIndex = widget.selectedIndex;
   }
 
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     selectedIndex = index;
-  //   });
-  //   switch (index) {
-  //     case 0:
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => DashboardPage(selectedIndex: selectedIndex),
-  //         ),
-  //       );
-  //       break;
-  //     case 4:
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => UserProfile(selectedIndex: selectedIndex),
-  //         ),
-  //       );
-  //       break;
-  //   }
-  // }
-
-  // Method to refresh user data
   Future<void> refreshPetProfile(String petId) async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
@@ -80,37 +54,7 @@ class _PetProfileState extends State<PetProfile> {
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.green,
-        selectedItemColor: Colors.green[800],
-        unselectedItemColor: Colors.green[200],
-        showSelectedLabels: true,
-        currentIndex: selectedIndex,
-        // onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Manage',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -306,7 +250,7 @@ class _PetProfileState extends State<PetProfile> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => PetHealth(selectedIndex: 3),
+                                        builder: (context) => PetHealth(),
                                       ),
                                     );
                                   },
