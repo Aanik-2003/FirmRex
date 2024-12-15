@@ -226,26 +226,7 @@ class MapSampleState extends State<MapSample> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         actions: [
-          // Search bar in the app bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 1),
-            child: SizedBox(
-              width: 350,
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      // Implement search functionality
-                      print('Search: ${_searchController.text}');
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
       body: _getSelectedView(),
