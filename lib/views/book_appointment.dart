@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firm_rex/model/esewa_pay.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
@@ -59,7 +60,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
     }
 
     try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
       await FirebaseFirestore.instance.collection('bookings').add({
+        'uid': uid,
         'doctorId': docId,
         'patientName': _nameController.text,
         'appointmentDate': _selectedDate,

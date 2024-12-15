@@ -1,3 +1,4 @@
+import 'package:firm_rex/controller/booking_controller.dart';
 import 'package:firm_rex/controller/note_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class CalendarWithNotes extends StatefulWidget {
 
 class _CalendarWithNotesState extends State<CalendarWithNotes> {
   final nc = NoteController();
+  final bc = BookingController();
   // Calendar controller variables
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -26,6 +28,7 @@ class _CalendarWithNotesState extends State<CalendarWithNotes> {
 
   // Store notes as a map: { Date: List<Notes> }
   Map<DateTime, List<String>> _notes = {};
+  Map<DateTime, List<Map<String, dynamic>>> _bookings = {};  // Store bookings
 
   // Text Controller for note input
   final TextEditingController _noteTextController = TextEditingController();
@@ -41,14 +44,35 @@ class _CalendarWithNotesState extends State<CalendarWithNotes> {
     super.didChangeDependencies();
 
     // Check if _selectedDay is not null before calling getNotes
+    // Fetch notes and bookings when a day is selected
     if (_selectedDay != null) {
+      // Fetch notes
       nc.getNotes(_selectedDay!).listen((notes) {
         setState(() {
-          // Update the notes for the selected day
           _notes[_selectedDay!] = notes.map((note) => note['title'] as String).toList();
         });
       });
+
+      // Fetch bookings
+      bc.getBookings(_selectedDay!).listen((bookings) {
+        setState(() {
+          _bookings[_selectedDay!] = bookings;
+        });
+      });
     }
+  }
+
+  // Function to get both notes and bookings for a day
+  List<String> _getEventsForDay(DateTime day) {
+    List<String> events = [];
+    if (_notes[day] != null) {
+      events.addAll(_notes[day]!);
+    }
+    if (_bookings[day] != null) {
+      // Add a simple representation of the bookings
+      events.addAll(_bookings[day]!.map((booking) => 'Booking: ${booking['patientName']}'));
+    }
+    return events;
   }
 
   // Function to get notes for a day
