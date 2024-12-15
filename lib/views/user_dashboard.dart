@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firm_rex/controller/pet_controller.dart';
 import 'package:firm_rex/views/add_pet.dart';
+import 'package:firm_rex/views/book_appointment.dart';
 import 'package:firm_rex/views/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import '../auth/admin_provider.dart';
 import '../controller/doctor_controller.dart';
 import '../controller/get_user.dart';
 import 'add_doctors.dart';
+import 'notification.dart';
 
 class DashboardPage extends StatefulWidget {
   final int selectedIndex;
@@ -545,6 +547,13 @@ class _DashboardPageState extends State<DashboardPage> {
                                           left: cardWidth * 0.15,
                                           child: ElevatedButton(
                                             onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => AppointmentPage(doctorName: doctor['fullName'],
+                                                    doctorId: doctor['id'],),
+                                                ),
+                                              );
                                               print(
                                                   'Book Appointment button pressed');
                                             },
@@ -690,19 +699,20 @@ class _DashboardPageState extends State<DashboardPage> {
                       Positioned(
                         bottom: height * 0.01, // Responsive bottom position
                         right: width * 0.03, // Responsive right position
-                        child: Container(
-                          height: height * 0.07, // Responsive height
-                          width: width * 0.15, // Responsive width
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width * 0.03), // Scaled corner radius
-                            color: Colors.grey.shade300, // Optional background color
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(width * 0.03), // Adjust to maintain rounded edges
-                            child: Image.asset(
-                              "images/logo.jpeg",
-                              fit: BoxFit.fill,
-                            ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => NotificationsPage()),
+                            );
+                            // Handle the tap event here
+                            print('Notification icon tapped');
+                            // You can perform any action, such as navigating or showing a message
+                          },
+                          child: Icon(
+                            Icons.notifications, // Notification icon
+                            size: width * 0.08, // Adjust size as needed
+                            color: Colors.grey.shade300, // Icon color
                           ),
                         ),
                       ),
