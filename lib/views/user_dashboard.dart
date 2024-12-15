@@ -137,225 +137,227 @@ class _DashboardPageState extends State<DashboardPage> {
                 final doctor = doctors[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: padding),
-                  child: Container(
-                    width: cardWidth,
-                    height: cardHeight,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(cardHeight * 0.15),
-                      ),
-                      shadows: [
-                        BoxShadow(
-                          color: const Color(0x3F000000),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: cardWidth * 0.94,
-                          // Adjust inner container width
-                          height: cardHeight,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                strokeAlign: BorderSide.strokeAlignOutside,
-                                color: const Color(0x33A5A5A5),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Show the dialog when the card is tapped
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Dr. ${doctor['fullName'] ?? 'Unknown Doctor'}'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  Text('Field of Study: ${doctor['fieldOfStudy'] ?? 'Unknown'}'),
+                                  SizedBox(height: 8.0),
+                                  Text('Status: ${doctor['status'] ?? 'Unknown'}'),
+                                  SizedBox(height: 8.0),
+                                  Text('Location: ${doctor['location'] ?? 'Unknown'}'),
+                                  SizedBox(height: 8.0),
+                                  Text('Charge per Appointment: \$${doctor['chargePerAppointment'] ?? '0'}'),
+                                  SizedBox(height: 8.0),
+                                  // You can add more details here as needed
+                                ],
                               ),
-                              borderRadius: BorderRadius.circular(
-                                  cardHeight * 0.15),
                             ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Close'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Close the dialog
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: cardWidth,
+                      height: cardHeight,
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(cardHeight * 0.15),
+                        ),
+                        shadows: [
+                          BoxShadow(
+                            color: const Color(0x3F000000),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                            spreadRadius: 0,
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.all(cardWidth * 0.03),
-                            // Scaled padding
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Left Section
-                                Container(
-                                  width: cardWidth * 0.35,
-                                  height: cardHeight,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Container(
-                                        width: cardWidth * 0.33,
-                                        height: cardHeight * 0.6,
-                                        decoration: ShapeDecoration(
-                                          image: DecorationImage(
-                                            image: doctor['photo'] != null
-                                                ? MemoryImage(base64Decode(doctor['photo'])) // Use base64 decoded image
-                                                : AssetImage("images/profile.png") as ImageProvider,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                8),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: cardHeight * 0.2),
-                                    ],
-                                  ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: cardWidth * 0.94,
+                            // Adjust inner container width
+                            height: cardHeight,
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  width: 1,
+                                  strokeAlign: BorderSide.strokeAlignOutside,
+                                  color: const Color(0x33A5A5A5),
                                 ),
-
-                                // Right Section
-                                Expanded(
-                                  child: Container(
+                                borderRadius: BorderRadius.circular(cardHeight * 0.15),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(cardWidth * 0.03),
+                              // Scaled padding
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Left Section (doctor photo)
+                                  Container(
+                                    width: cardWidth * 0.35,
                                     height: cardHeight,
-                                    child: Stack(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Positioned(
-                                          top: cardHeight * 0.1,
-                                          left: 0,
-                                          child: Text(
-                                            doctor['fullName'] ?? 'Unknown',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: cardWidth * 0.05,
-                                              fontFamily: 'Fredoka',
-                                              fontWeight: FontWeight.w500,
+                                        Container(
+                                          width: cardWidth * 0.33,
+                                          height: cardHeight * 0.6,
+                                          decoration: ShapeDecoration(
+                                            image: DecorationImage(
+                                              image: doctor['photo'] != null
+                                                  ? MemoryImage(base64Decode(doctor['photo'])) // Use base64 decoded image
+                                                  : AssetImage("images/profile.png") as ImageProvider,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8),
                                             ),
                                           ),
                                         ),
-                                        Positioned(
-                                          top: cardHeight * 0.25,
-                                          left: 0,
-                                          child: Text(
-                                            doctor['fieldOfStudy'] ??
-                                                'Field Unknown',
-                                            style: TextStyle(
-                                              color: const Color(0xFFA5A5A5),
-                                              fontSize: cardWidth * 0.03,
-                                              fontFamily: 'Fredoka',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: cardHeight * 0.45,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: cardWidth * 0.18,
-                                                height: cardHeight * 0.1,
-                                                padding: const EdgeInsets
-                                                    .symmetric(
-                                                    horizontal: 13,
-                                                    vertical: 2),
-                                                decoration: ShapeDecoration(
-                                                  shape: RoundedRectangleBorder(
-                                                    side: const BorderSide(
-                                                        width: 1.09,
-                                                        color: Colors
-                                                            .redAccent),
-                                                    borderRadius: BorderRadius
-                                                        .circular(21.89),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  doctor['status'] ??
-                                                      'Status Unknown',
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: cardWidth * 0.03,
-                                                    fontFamily: 'Fredoka',
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: cardWidth * 0.04),
-                                              const Icon(
-                                                Icons.location_on,
-                                                color: Colors.red,
-                                                size: 16.0,
-                                              ),
-                                              SizedBox(width: cardWidth * 0.01),
-                                              Text(
-                                                doctor['location'] ?? 'Unknown',
-                                                style: TextStyle(
-                                                  color: const Color(
-                                                      0xFFA5A5A5),
-                                                  fontSize: cardWidth * 0.03,
-                                                  fontFamily: 'Fredoka',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                              SizedBox(width: cardWidth * 0.04),
-                                              const Icon(
-                                                Icons.attach_money,
-                                                color: Colors.green,
-                                                size: 16.0,
-                                              ),
-                                              Text(
-                                                doctor['chargePerAppointment'] ?? '0\$',
-                                                style: TextStyle(
-                                                  color: const Color(
-                                                      0xFFA5A5A5),
-                                                  fontSize: cardWidth * 0.03,
-                                                  fontFamily: 'Fredoka',
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Positioned(
-                                          height: 30,
-                                          top: cardHeight * 0.73,
-                                          left: cardWidth * 0.15,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => AppointmentPage(doctorName: doctor['fullName'],
-                                                    doctorId: doctor['id'],),
-                                                ),
-                                              );
-                                              print(
-                                                  'Book Appointment button pressed');
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius
-                                                    .circular(8),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: cardWidth * 0.04,
-                                                  vertical: cardHeight * 0.02),
-                                            ),
+                                        SizedBox(height: cardHeight * 0.2),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // Right Section (doctor details)
+                                  Expanded(
+                                    child: Container(
+                                      height: cardHeight,
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            top: cardHeight * 0.1,
+                                            left: 0,
                                             child: Text(
-                                              'Book Appointment >',
-                                              textAlign: TextAlign.center,
+                                              doctor['fullName'] ?? 'Unknown',
                                               style: TextStyle(
                                                 color: Colors.black,
+                                                fontSize: cardWidth * 0.05,
+                                                fontFamily: 'Fredoka',
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: cardHeight * 0.25,
+                                            left: 0,
+                                            child: Text(
+                                              doctor['fieldOfStudy'] ?? 'Field Unknown',
+                                              style: TextStyle(
+                                                color: const Color(0xFFA5A5A5),
                                                 fontSize: cardWidth * 0.03,
                                                 fontFamily: 'Fredoka',
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Positioned(
+                                            top: cardHeight * 0.45,
+                                            child: Row(
+                                              children: [
+
+                                                const Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.red,
+                                                  size: 16.0,
+                                                ),
+                                                SizedBox(width: cardWidth * 0.01),
+                                                Text(
+                                                  doctor['location'] ?? 'Unknown',
+                                                  style: TextStyle(
+                                                    color: const Color(0xFFA5A5A5),
+                                                    fontSize: cardWidth * 0.03,
+                                                    fontFamily: 'Fredoka',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                SizedBox(width: cardWidth * 0.04),
+                                                const Icon(
+                                                  Icons.attach_money,
+                                                  color: Colors.green,
+                                                  size: 16.0,
+                                                ),
+                                                Text(
+                                                  doctor['chargePerAppointment'] ?? '0\$',
+                                                  style: TextStyle(
+                                                    color: const Color(0xFFA5A5A5),
+                                                    fontSize: cardWidth * 0.03,
+                                                    fontFamily: 'Fredoka',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Positioned(
+                                            height: 30,
+                                            top: cardHeight * 0.73,
+                                            left: cardWidth * 0.15,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => AppointmentPage(doctorName: doctor['fullName'],
+                                                      doctorId: doctor['id'],),
+                                                  ),
+                                                );
+                                                print(
+                                                    'Book Appointment button pressed');
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius
+                                                      .circular(8),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: cardWidth * 0.04,
+                                                    vertical: cardHeight * 0.02),
+                                              ),
+                                              child: Text(
+                                                'Book Appointment >',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: cardWidth * 0.03,
+                                                  fontFamily: 'Fredoka',
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
