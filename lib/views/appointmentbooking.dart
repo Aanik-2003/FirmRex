@@ -125,7 +125,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
               }).toList(),
             ),
 
-            Spacer(),
+            const Spacer(),
 
             // Book Appointment Button
             ElevatedButton(
