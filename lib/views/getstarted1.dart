@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 class GetStarted1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -18,121 +21,113 @@ class GetStarted1 extends StatelessWidget {
               ),
             ),
           ),
-          // Bottom Content Card
+
+          // Bottom Content Card with Scrollable Area
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.5,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+            child: SingleChildScrollView( // Make the bottom part scrollable if needed
+              child: Container(
+                width: double.infinity,
+                height: screenHeight * 0.57, // Increased the height for better space
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Pagination Dots
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 7,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              color: Colors.orange,
-                              shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20)
-                          ),
-                        ),
-                        Container(
-                          width: 20,
-                          height: 7,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20)
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.05, // 5% of screen width
+                    vertical: screenHeight * 0.04, // 4% of screen height
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Pagination Dots
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (int i = 0; i < 3; i++)
+                            Container(
+                              width: screenWidth * 0.05, // 5% of screen width
+                              height: screenHeight * 0.01, // 1% of screen height
+                              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                              decoration: BoxDecoration(
+                                color: i == 0 ? Colors.orange : Colors.grey,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: screenHeight * 0.03), // Space between elements
 
-                          ),
-                        ),
-                        Container(
-                          width: 20,
-                          height: 7,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              color: Colors.grey,
-                              shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(20)
-
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Logo
-                    Padding(
-                      padding: const EdgeInsets.all(16.0), // Adjust padding as needed
-                      child: Image.asset(
+                      // Logo
+                      Image.asset(
                         'images/coco.png', // Replace with your logo asset
-                        width: 120,
-                        height: 120,
+                        width: screenWidth * 0.3, // 30% of screen width
+                        height: screenWidth * 0.3, // Match height to width
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    // Welcome Text
-                    Text(
-                      'Hey! Welcome',
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Fredoka',
-                        color: Color(0xFF131314),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    // Subtitle
-                    Text(
-                      'while you sit and stay - we’ll go\nout and play',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Fredoka',
-                        color: Color(0xFFA1A1A1),
-                      ),
-                    ),
-                    SizedBox(height: 15),
 
-                    Spacer(),
-                    Spacer(),
-                    // Next Button
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => GetStarted2()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF5BB15A), // Green color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 160),
-                      ),
-                      child: Text(
-                        'Next',
+                      SizedBox(height: screenHeight * 0.02),
+
+                      // Welcome Text
+                      Text(
+                        'Hey! Welcome',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: screenWidth * 0.08, // 8% of screen width
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          fontFamily: 'Fredoka',
+                          color: Color(0xFF131314),
                         ),
                       ),
-                    ),
-                  ],
+
+                      SizedBox(height: screenHeight * 0.01),
+
+                      // Subtitle
+                      Text(
+                        'while you sit and stay - we’ll go\nout and play',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.045, // 4.5% of screen width
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Fredoka',
+                          color: Color(0xFFA1A1A1),
+                        ),
+                      ),
+
+                      SizedBox(height: screenHeight * 0.03),
+
+                      // Next Button
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GetStarted2()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF5BB15A), // Green color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.02, // 2% of screen height
+                            horizontal: screenWidth * 0.2, // Adjust padding dynamically
+                          ),
+                        ),
+                        child: Text(
+                          'Next',
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.05, // 5% of screen width
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

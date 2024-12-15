@@ -4,6 +4,7 @@ import 'package:firm_rex/views/user_dashboard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'forgotPassword.dart';
 import 'signuppage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -87,17 +88,27 @@ class LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.only(right: 30.0),
                           child: Align(
                             alignment: Alignment.bottomRight,
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: Color(0xFFF67E27),
-                                fontSize: 16,
-                                fontFamily: 'Fredoka',
-                                fontWeight: FontWeight.w400,
+                            child: GestureDetector(
+                              onTap: () {
+                                // Navigate to the Forgot Password page
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Forgotpassword()), // Replace with your page
+                                );
+                              },
+                              child: Text(
+                                'Forgot Password?',
+                                style: TextStyle(
+                                  color: Color(0xFFF67E27),
+                                  fontSize: 16,
+                                  fontFamily: 'Fredoka',
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ),
                         ),
+
                         SizedBox(height: size.height * 0.03),
 
                         // Login Button

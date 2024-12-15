@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'loginpage.dart'; // Import your LoginPage
+
 class GetStarted3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -17,133 +22,136 @@ class GetStarted3 extends StatelessWidget {
               ),
             ),
           ),
-          // Bottom Content Card
+
+          // Bottom Content Card with Scrollable Area
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.5,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+            child: SingleChildScrollView( // Make the bottom part scrollable if needed
+              child: Container(
+                width: double.infinity,
+                height: screenHeight * 0.6, // Increased the height for better space
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Pagination Dots
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 7,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Container(
-                          width: 20,
-                          height: 7,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Container(
-                          width: 20,
-                          height: 7,
-                          margin: EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    // Welcome Text
-                    Text(
-                      'We Provide',
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Fredoka',
-                        color: Color(0xFF131314),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    // Subtitle
-                    Text(
-                      '24hrs location tracking & health \nupdates \n\nOn time feeding \nupdates',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Fredoka',
-                        color: Color(0xFFA1A1A1),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Spacer(),
-                    // Next Button
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => GetStarted3()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF5BB15A), // Green color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 150, vertical: 15),
-                      ),
-                      child: Text(
-                        'Get Started',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    
-                    RichText(
-                      text: TextSpan(
-                        text: 'Already Have An Account? ',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Fredoka',
-                          color: Color(0xFF131314), // Default text color
-                        ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.05, // 5% of screen width
+                    vertical: screenHeight * 0.04, // 4% of screen height
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Pagination Dots
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextSpan(
-                            text: 'Login',
-                            style: TextStyle(
-                              color: Colors.orange,
-                              fontWeight: FontWeight.bold,
+                          for (int i = 0; i < 3; i++)
+                            Container(
+                              width: screenWidth * 0.05, // 5% of screen width
+                              height: screenHeight * 0.01, // 1% of screen height
+                              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                              decoration: BoxDecoration(
+                                color: i == 2 ? Colors.orange : Colors.grey,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                             ),
-                          ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 5),
-                  ],
+                      SizedBox(height: screenHeight * 0.03), // Space between elements
+
+                      // Welcome Text
+                      Text(
+                        'We Provide',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.08, // 8% of screen width
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Fredoka',
+                          color: Color(0xFF131314),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
+
+                      // Subtitle
+                      Text(
+                        '24hrs location tracking & health\nupdates\n\nOn time feeding\nupdates',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.05, // 5% of screen width
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Fredoka',
+                          color: Color(0xFFA1A1A1),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.03),
+
+                      // Next Button
+                      ElevatedButton(
+                        onPressed: () {
+                          // Add your navigation logic here
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF5BB15A), // Green color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.02, // 2% of screen height
+                            horizontal: screenWidth * 0.2, // Adjust padding dynamically
+                          ),
+                        ),
+                        child: Text(
+                          'Get Started',
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.05, // 5% of screen width
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+
+                      // RichText (Login) with GestureDetector
+                      SizedBox(height: screenHeight * 0.02),
+                      GestureDetector(
+                        onTap: () {
+                          // Navigate to LoginPage when tapped
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                          );
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Already Have An Account? ',
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.04, // 4% of screen width
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Fredoka',
+                              color: Color(0xFF131314),
+                            ),
+                            children: [
+                              TextSpan(
+                                text: 'Login',
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
+                    ],
+                  ),
                 ),
               ),
             ),
