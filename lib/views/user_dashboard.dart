@@ -11,6 +11,8 @@ import '../auth/admin_provider.dart';
 import '../controller/doctor_controller.dart';
 import '../controller/get_user.dart';
 import 'add_doctors.dart';
+import 'calender.dart';
+import 'map.dart';
 import 'notification.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -99,255 +101,22 @@ class _DashboardPageState extends State<DashboardPage> {
           );
           break;
         case 1:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => ExplorePage()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CalendarWithNotes(selectedIndex: index, onItemTapped: onItemTapped)),
+        );
           break;
         case 2:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => MapPage()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MapSample(selectedIndex: index, onItemTapped: onItemTapped,)),
+        );
           break;
       }
     }
   }
 
   @override
-  // Widget buildHorizontalScroll(int itemCount) {
-  //   return LayoutBuilder(
-  //     builder: (context, constraints) {
-  //       final screenWidth = constraints.maxWidth;
-  //       final cardWidth = screenWidth * 1; // Adjust card width to fit within the screen
-  //       final cardHeight = screenWidth * 0.6; // Adjust card height based on the screen width
-  //       final padding = screenWidth * 0.02; // Padding as a percentage of screen width
-  //
-  //       return SingleChildScrollView(
-  //         scrollDirection: Axis.horizontal,
-  //         child: Row(
-  //           children: List.generate(
-  //             itemCount,
-  //                 (index) => Padding(
-  //               padding: EdgeInsets.symmetric(horizontal: padding),
-  //               child: Container(
-  //                 width: cardWidth,
-  //                 height: cardHeight,
-  //                 decoration: ShapeDecoration(
-  //                   shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(cardHeight * 0.15),
-  //                   ),
-  //                   shadows: [
-  //                     BoxShadow(
-  //                       color: const Color(0x3F000000),
-  //                       blurRadius: 10,
-  //                       offset: const Offset(0, 4),
-  //                       spreadRadius: 0,
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.start,
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                   Container(
-  //                   width: cardWidth * 0.94, // Adjust inner container width
-  //                   height: cardHeight,
-  //                   decoration: ShapeDecoration(
-  //                     color: Colors.white,
-  //                     shape: RoundedRectangleBorder(
-  //                       side: BorderSide(
-  //                         width: 1,
-  //                         strokeAlign: BorderSide.strokeAlignOutside,
-  //                         color: const Color(0x33A5A5A5),
-  //                       ),
-  //                       borderRadius: BorderRadius.circular(cardHeight * 0.15),
-  //                     ),
-  //                   ),
-  //                   child: Padding(
-  //                     padding: EdgeInsets.all(cardWidth * 0.03), // Scaled padding
-  //                     child: Row(
-  //                       mainAxisAlignment: MainAxisAlignment.start,
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         // Left Section
-  //                         Container(
-  //                           width: cardWidth * 0.35,
-  //                           height: cardHeight,
-  //                           child: Column(
-  //                             crossAxisAlignment: CrossAxisAlignment.start,
-  //                             children: [
-  //                               Container(
-  //                                 width: cardWidth * 0.33,
-  //                                 height: cardHeight * 0.6,
-  //                                 decoration: ShapeDecoration(
-  //                                   image: const DecorationImage(
-  //                                     image: NetworkImage(
-  //                                         "https://via.placeholder.com/114x78"),
-  //                                     fit: BoxFit.fill,
-  //                                   ),
-  //                                   shape: RoundedRectangleBorder(
-  //                                     borderRadius: BorderRadius.circular(8),
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                               SizedBox(height: cardHeight * 0.2),
-  //                               Text(
-  //                                 'Last Visit: 25/11/2022',
-  //                                 textAlign: TextAlign.right,
-  //                                 style: TextStyle(
-  //                                   color: Colors.black,
-  //                                   fontSize: cardWidth * 0.03,
-  //                                   fontFamily: 'Fredoka',
-  //                                   fontWeight: FontWeight.w400,
-  //                                   height: 1.2,
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ),
-  //
-  //                         // Right Section
-  //                         Expanded(  // Wrap the right section in Expanded to allow flexibility
-  //                           child: Container(
-  //                             height: cardHeight,
-  //                             child: Stack(
-  //                               children: [
-  //                                 Positioned(
-  //                                   top: cardHeight * 0.1,
-  //                                   left: 0,
-  //                                   child: Text(
-  //                                     'Dr. Nambuvan',
-  //                                     style: TextStyle(
-  //                                       color: Colors.black,
-  //                                       fontSize: cardWidth * 0.05,
-  //                                       fontFamily: 'Fredoka',
-  //                                       fontWeight: FontWeight.w500,
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 Positioned(
-  //                                   top: cardHeight * 0.25,
-  //                                   left: 0,
-  //                                   child: Text(
-  //                                     'Bachelor of veterinary science',
-  //                                     style: TextStyle(
-  //                                       color: const Color(0xFFA5A5A5),
-  //                                       fontSize: cardWidth * 0.03,
-  //                                       fontFamily: 'Fredoka',
-  //                                       fontWeight: FontWeight.w400,
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                                 Positioned(
-  //                                   top: cardHeight * 0.45,
-  //                                   child: Row(
-  //                                     children: [
-  //                                       Container(
-  //                                         width: cardWidth * 0.18,
-  //                                         height: cardHeight * 0.1,
-  //                                         padding: const EdgeInsets.symmetric(
-  //                                             horizontal: 13, vertical: 2),
-  //                                         decoration: ShapeDecoration(
-  //                                           shape: RoundedRectangleBorder(
-  //                                             side: const BorderSide(
-  //                                                 width: 1.09,
-  //                                                 color: Colors.redAccent),
-  //                                             borderRadius:
-  //                                             BorderRadius.circular(21.89),
-  //                                           ),
-  //                                         ),
-  //                                         child: Text(
-  //                                           'Roudy',
-  //                                           style: TextStyle(
-  //                                             color: Colors.grey,
-  //                                             fontSize: cardWidth * 0.03,
-  //                                             fontFamily: 'Fredoka',
-  //                                             fontWeight: FontWeight.w400,
-  //                                           ),
-  //                                         ),
-  //                                       ),
-  //                                       SizedBox(width: cardWidth * 0.04),
-  //                                       const Icon(
-  //                                         Icons.location_on,
-  //                                         color: Colors.red,
-  //                                         size: 16.0,
-  //                                       ),
-  //                                       SizedBox(width: cardWidth * 0.01),
-  //                                       Text(
-  //                                         '2.5 km',
-  //                                         style: TextStyle(
-  //                                           color: const Color(0xFFA5A5A5),
-  //                                           fontSize: cardWidth * 0.03,
-  //                                           fontFamily: 'Fredoka',
-  //                                           fontWeight: FontWeight.w400,
-  //                                         ),
-  //                                       ),
-  //                                       SizedBox(width: cardWidth * 0.04),
-  //                                       const Icon(
-  //                                         Icons.attach_money,
-  //                                         color: Colors.green,
-  //                                         size: 16.0,
-  //                                       ),
-  //                                       Text(
-  //                                         '100\$',
-  //                                         style: TextStyle(
-  //                                           color: const Color(0xFFA5A5A5),
-  //                                           fontSize: cardWidth * 0.03,
-  //                                           fontFamily: 'Fredoka',
-  //                                           fontWeight: FontWeight.w400,
-  //                                         ),
-  //                                       ),
-  //                                     ],
-  //                                   ),
-  //                                 ),
-  //                                 Positioned(
-  //                                   height: 30,
-  //                                   top: cardHeight * 0.73,
-  //                                   left: cardWidth * 0.15,
-  //                                   child: ElevatedButton(
-  //                                     onPressed: () {
-  //                                       print('Book Appointment button pressed');
-  //                                     },
-  //                                     style: ElevatedButton.styleFrom(
-  //                                       shape: RoundedRectangleBorder(
-  //                                         borderRadius: BorderRadius.circular(8),
-  //                                       ),
-  //                                       padding: EdgeInsets.symmetric(
-  //                                           horizontal: cardWidth * 0.04,
-  //                                           vertical: cardHeight * 0.02),
-  //                                     ),
-  //                                     child: Text(
-  //                                       'Book Appointment >',
-  //                                       textAlign: TextAlign.center,
-  //                                       style: TextStyle(
-  //                                         color: Colors.black,
-  //                                         fontSize: cardWidth * 0.03,
-  //                                         fontFamily: 'Fredoka',
-  //                                         fontWeight: FontWeight.w400,
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget buildHorizontalScroll(List<Map<String, dynamic>> doctors) {
     return LayoutBuilder(
       builder: (context, constraints) {
