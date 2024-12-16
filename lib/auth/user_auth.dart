@@ -14,17 +14,39 @@ class UserAuth {
   late final String role;
   late final bool isAdmin;
 
+  // Helper to show the loading indicator
+  void showLoading(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  // Helper to hide the loading indicator
+  void hideLoading(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
   // Email Sign-Up
   Future<User?> createUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
+      showLoading(context); // Show loading indicator
       final UserCredential cred = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      hideLoading(context);
       return cred.user;
     } catch (e) {
       _handleAuthException(e, context);
+    } finally {
+      hideLoading(context); // Hide loading indicator
     }
     return null;
   }
@@ -34,7 +56,6 @@ class UserAuth {
   }
 
   // Email Sign-In
-
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     // Validate email and password fields
@@ -49,6 +70,7 @@ class UserAuth {
     }
 
     try {
+      showLoading(context);
       // Attempt login
       final UserCredential cred = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -80,6 +102,7 @@ class UserAuth {
                 backgroundColor: Colors.green,
               ),
             );
+            hideLoading(context);
 
             // Pass isAdmin to the DashboardPage or set it globally
             Navigator.push(
@@ -121,30 +144,27 @@ class UserAuth {
     return null;
   }
 
-
-
   // Google Sign-Up
   Future<User?> googleSignUp(BuildContext context) async {
     try {
+      showLoading(context); // Show loading indicator
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        // User canceled the Google sign-in
         return null;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Sign in with Firebase using Google credentials
       final UserCredential userCredential =
       await _auth.signInWithCredential(credential);
 
-      // Optionally, add Google user details to Firestore directly here, if needed
       await addGoogleUserDetails(userCredential.user, context);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -163,6 +183,8 @@ class UserAuth {
           backgroundColor: Colors.red,
         ),
       );
+    } finally {
+      hideLoading(context); // Hide loading indicator
     }
     return null;
   }
@@ -174,11 +196,9 @@ class UserAuth {
         final String uid = user.uid;
         final String email = user.email ?? "";
 
-        // Check if the user document already exists in Firestore
         final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
         if (!doc.exists) {
-          // Add Google user details to Firestore if not already added
           await FirebaseFirestore.instance.collection('users').doc(uid).set({
             'uid': uid,
             'UserName': '',
@@ -191,12 +211,14 @@ class UserAuth {
             'role': 'user',
           }).catchError((error) {
             debugPrint('Failed to add Google user details: $error');
-            showSnackBar(context, 'Failed to save Google user details. Please try again.', Colors.red);
+            showSnackBar(
+                context, 'Failed to save Google user details. Please try again.', Colors.red);
           });
         }
       } catch (e) {
         debugPrint('Error adding Google user details: $e');
-        showSnackBar(context, 'An unexpected error occurred. Please try again.', Colors.red);
+        showSnackBar(
+            context, 'An unexpected error occurred. Please try again.', Colors.red);
       }
     }
   }
@@ -204,6 +226,7 @@ class UserAuth {
   // Sign-Out
   Future<void> signOut(BuildContext context) async {
     try {
+      showLoading(context); // Show loading indicator
       await _auth.signOut();
       await _googleSignIn.signOut();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -220,6 +243,8 @@ class UserAuth {
           backgroundColor: Colors.red,
         ),
       );
+    } finally {
+      hideLoading(context); // Hide loading indicator
     }
   }
 
@@ -266,7 +291,6 @@ class UserAuth {
       ),
     );
   }
-
 
   // Display Snack Bar
   void showSnackBar(BuildContext context, String message, Color backgroundColor) {

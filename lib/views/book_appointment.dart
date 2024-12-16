@@ -94,6 +94,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: Colors.green,
         title: Text(doctorName),
         leading: IconButton(

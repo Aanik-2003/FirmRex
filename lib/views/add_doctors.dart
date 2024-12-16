@@ -252,6 +252,7 @@ class _AddDoctorsState extends State<AddDoctors> {
       ),
       appBar: AppBar(
         title: const Text('Manage Doctors'),
+        foregroundColor: Colors.white,
         backgroundColor: Colors.green,
       ),
       body: RefreshIndicator(

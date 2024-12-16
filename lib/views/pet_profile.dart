@@ -241,7 +241,7 @@ class _PetProfileState extends State<PetProfile> {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Text(
-                                    petData['healthStatus'] ?? 'Health details not available.',
+                                    petData['healthStatus'] ?? 'View Health details',
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                 ),

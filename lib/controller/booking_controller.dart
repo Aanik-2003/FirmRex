@@ -31,17 +31,16 @@ class BookingController {
       print('Error adding booking: $e');
     }
   }
-  // Fetch bookings for a specific date
+  // Fetch bookings for a specific date and user
   Stream<List<Map<String, dynamic>>> getBookings(DateTime selectedDay) {
-    // Get the start and end of the selected day
     DateTime startOfDay = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
     DateTime endOfDay = startOfDay.add(const Duration(days: 1)).subtract(const Duration(milliseconds: 1));
 
-    // Query Firestore for bookings within the selected day's range
     return _firestore
         .collection('bookings')
         .where('appointmentDate', isGreaterThanOrEqualTo: startOfDay)
         .where('appointmentDate', isLessThanOrEqualTo: endOfDay)
+        .where('uid', isEqualTo: uid)  // Filter by the current user's UID
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {
