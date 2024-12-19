@@ -26,7 +26,6 @@ class RegisterUser {
 
       if (user != null) {
         final String uid = user.uid;
-
         // Use the UID as the document ID
         await _firestore.collection('users').doc(uid).set({
           'uid': uid,
@@ -70,19 +69,19 @@ class RegisterUser {
       showSnackBar(context, "All fields are required.", Colors.red);
       return;
     }
-
     // Create the user
     User? newUser = await _auth.createUserWithEmailAndPassword(email, password, context);
 
-
-    if (_auth.isUserLoggedIn(newUser)) {
-      // If user creation was successful, add details to Firestore
+    if (_auth.isNewUser(newUser)) {
+      // If user creation was successful, add details to users colletion
       await addUserDetails(userName, email, context);
-      showSnackBar(context, "Account created successfully.", Colors.green);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      if(context.mounted){
+        showSnackBar(context, "Account created successfully.", Colors.green);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      }
     } else {
       showSnackBar(context, "Signup failed. Please try again.", Colors.red);
     }

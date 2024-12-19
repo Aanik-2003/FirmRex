@@ -1,4 +1,5 @@
 import 'package:firm_rex/model/medical_records_edit.dart';
+import 'package:firm_rex/model/wellness_edit.dart';
 import 'package:firm_rex/views/medical_records.dart';
 import 'package:flutter/material.dart';
 import '../controller/medical_records_controller.dart';
@@ -13,6 +14,7 @@ class PetHealth extends StatefulWidget {
 class _PetHealthState extends State<PetHealth>{
   final _editMedicalRecords = EditMedicalRecords();
   final _medicalController = MedicalRecordsController();
+  final _editWellnessRecords = EditWellnessRecords();
 
   Future<void> _refreshData() async {
     await Future.delayed(const Duration(seconds: 1));
@@ -39,9 +41,9 @@ class _PetHealthState extends State<PetHealth>{
                   _buildCard(
                     context,
                     title: "New Vaccinations",
-                    onAddPressed: () => _editMedicalRecords.addPastVaccineForm(context),
+                    onAddPressed: () => _editWellnessRecords.addNewVaccine(context),
                     child: FutureBuilder<List<Map<String, dynamic>>>(
-                      future: _medicalController.fetchAllVaccines(),
+                      future: _medicalController.fetchAllNewVaccines(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
@@ -52,27 +54,6 @@ class _PetHealthState extends State<PetHealth>{
                         } else {
                           List<Map<String, dynamic>> vaccines = snapshot.data!;
                           return _buildHorizontalScrollVaccine(context, vaccines);
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  _buildCard(
-                    context,
-                    title: "Past Treatments",
-                    onAddPressed: () => _editMedicalRecords.addPastTreatmentForm(context),
-                    child: FutureBuilder<List<Map<String, dynamic>>>(
-                      future: _medicalController.fetchAllTreatments(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text("Error: ${snapshot.error}"));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(child: Text("No Treatment Found"));
-                        } else {
-                          List<Map<String, dynamic>> treatments = snapshot.data!;
-                          return _buildHorizontalScrollTreatment(context, treatments);
                         }
                       },
                     ),

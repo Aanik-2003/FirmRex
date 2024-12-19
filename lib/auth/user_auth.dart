@@ -51,7 +51,7 @@ class UserAuth {
     return null;
   }
 
-  bool isUserLoggedIn(User? user) {
+  bool isNewUser(User? user) {
     return user != null;
   }
 
@@ -122,6 +122,7 @@ class UserAuth {
                 backgroundColor: Colors.red,
               ),
             );
+            hideLoading(context);
             await _auth.signOut(); // Sign out if role is missing
           }
         } catch (e) {
@@ -132,6 +133,7 @@ class UserAuth {
               backgroundColor: Colors.red,
             ),
           );
+          hideLoading(context);
         }
       }
 
@@ -139,6 +141,7 @@ class UserAuth {
     } catch (e) {
       _handleAuthException(e, context);
       debugPrint('Error during login: $e');
+      hideLoading(context);
     }
 
     return null;
@@ -283,7 +286,6 @@ class UserAuth {
           errorMessage = "Error: ${e.message}";
       }
     }
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(errorMessage),
